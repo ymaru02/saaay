@@ -1,27 +1,22 @@
 {
-  "name": "openvidu-js-node",
-  "version": "2.20.0",
+  "name": "back-end",
+  "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "ng test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon dist/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OpenVidu/openvidu-tutorials.git"
-  },
-  "author": "openvidu@gmail.com",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/OpenVidu/openvidu-tutorials/issues"
-  },
-  "homepage": "https://github.com/OpenVidu/openvidu-tutorials#readme",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.14",
-    "body-parser": "1.19.0",
-    "express": "4.17.1",
-    "express-session": "1.17.1",
-    "openvidu-node-client": "2.20.0"
-  }
+    "nodemon": "^2.0.15"
+  },
+  "keywords": []
 }
