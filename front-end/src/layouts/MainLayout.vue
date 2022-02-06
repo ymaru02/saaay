@@ -4,7 +4,7 @@
     <q-header elevated class="bg-grey-1">
       <div class="inner">
         <q-toolbar>
-          <img src="images/logo_100-removebg.png" alt="SAAAY Logo" />
+          <img src="images/logo_100.png" alt="SAAAY Logo" />
           <q-toolbar-title> </q-toolbar-title>
 
           <div>
@@ -40,13 +40,23 @@
           </div>
         </q-toolbar>
       </div>
+      <!--BADGES-->
+      <div class="badges">
+        <div class="badge">
+          <img src="images/badge1.png" alt="Badge1" />
+        </div>
+        <div class="badge">
+          <img src="images/badge2.png" alt="Badge2" />
+        </div>
+      </div>
     </q-header>
 
     <q-page-container>
       <router-view />
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-1 text-white">
+    <!-- footer -->
+    <!-- <q-footer elevated class="bg-grey-1 text-white">
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
@@ -54,12 +64,55 @@
           </q-avatar>
         </q-toolbar-title>
       </q-toolbar>
-    </q-footer>
+    </q-footer> -->
   </q-layout>
 </template>
 
 <script lang="ts">
+import _ from 'lodash';
+import gsap from 'gsap';
+
 export default {
+  mounted() {
+    /**
+     * 페이지 스크롤에 따른 요소 제어
+     */
+    // 페이지 스크롤에 영향을 받는 요소들을 검색!
+    const badgeEl = document.querySelector('header .badges') as HTMLDivElement;
+    const toTopEl = document.querySelector('#to-top') as HTMLDivElement;
+    // 페이지에 스크롤 이벤트를 추가!
+    // 스크롤이 지나치게 자주 발생하는 것을 조절(throttle, 일부러 부하를 줌)
+    window.addEventListener(
+      'scroll',
+      _.throttle(function () {
+        // 페이지 스크롤 위치가 500px이 넘으면.
+        if (window.scrollY > 500) {
+          // Badge 요소 숨기기!
+          gsap.to(badgeEl, 0.6, {
+            opacity: 0,
+            display: 'none',
+          });
+          // 상단으로 스크롤 버튼 보이기!
+          gsap.to(toTopEl, 0.2, {
+            x: 0,
+          });
+
+          // 페이지 스크롤 위치가 500px이 넘지 않으면.
+        } else {
+          // Badge 요소 보이기!
+          gsap.to(badgeEl, 0.6, {
+            opacity: 1,
+            display: 'block',
+          });
+          // 상단으로 스크롤 버튼 숨기기!
+          gsap.to(toTopEl, 0.2, {
+            x: 100,
+          });
+        }
+      }, 300)
+    );
+  },
+
   methods: {
     search() {
       /**       * 검색창 제어       */
@@ -90,10 +143,6 @@ export default {
 ul {
   list-style: none;
 }
-
-/* header > .inner {
-  height: 120px;
-} */
 
 /* sub-menu */
 header .sub-menu {
@@ -148,7 +197,7 @@ header .sub-menu .search input {
   transition: width 0.4s;
 }
 header .sub-menu .search input:focus {
-  width: 190px;
+  width: 170px;
   border-color: #444444;
 }
 header .sub-menu .search .material-icons {
@@ -181,5 +230,19 @@ header .tab-menu .item:hover {
   background-color: #2c2a29;
   color: #97eaff;
   border-radius: 6px 6px 0 0;
+}
+
+/*BADGES*/
+header .badges {
+  position: absolute;
+  top: 132px;
+  right: 12px;
+}
+header .badges .badge {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 </style>
