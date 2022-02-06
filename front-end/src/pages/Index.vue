@@ -1,12 +1,17 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
-  </q-page>
+  <div class="q-pa-md">
+    <!-- <img src="../../img/main5.jpg" alt="" /> -->
+    <!-- <q-img src="../../img/main1.gif"> </q-img> -->
+    <q-page class="row items-center justify-evenly">
+      <example-component
+        title="Example component"
+        active
+        :todos="todos"
+        :meta="meta"
+      >
+      </example-component>
+    </q-page>
+  </div>
 </template>
 
 <script lang="ts">
