@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { json } from "body-parser";
 
-import sampleRoutes from './routes/SampleRoute';
+import sampleRoutes from "./routes/SampleRoute";
 
 const app = express();
 
