@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('src/pages/CalendarMonth.vue') }],
   },
   {
-    path: '/day',
+    path: '/day/',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/CalenderDay.vue') }],
   },

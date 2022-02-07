@@ -1,26 +1,25 @@
 <template>
   <div class="subcontent">
-    <calendar-bar @prev="onPrev" @today="onToday" @next="onNext" />
+    <h2 class="row justify-center">{{ now }}</h2>
 
     <div class="row justify-center">
-      <div style="display: flex; max-width: 800px; width: 100%">
+      <div style="display: flex; max-width: 1200px; width: 100%">
         <q-calendar-month
           ref="calendar"
           v-model="selectedDate"
-          dark
-          :day-min-height="40"
+          :day-min-height="120"
           animated
           bordered
+          locale="ko-kr"
           @change="onChange"
           @moved="onMoved"
           @click-date="onClickDate"
           @click-day="onClickDay"
-          @click-workweek="onClickWorkweek"
-          @click-head-workweek="onClickHeadWorkweek"
           @click-head-day="onClickHeadDay"
         />
       </div>
     </div>
+    <calendar-bar @prev="onPrev" @today="onToday" @next="onNext" />
   </div>
 </template>
 
@@ -33,10 +32,11 @@ import '@quasar/quasar-ui-qcalendar/src/QCalendarMonth.sass';
 import { defineComponent } from 'vue';
 import CalendarBar from '../components/CalendarBar.vue';
 
-let today = new Date();
-let year = today.getFullYear(); // 년도
-let month = today.getMonth() + 1; // 월
-let date = today.getDate(); // 일
+const today = new Date();
+const year = today.getFullYear(); // 년도
+const month = today.getMonth() + 1; // 월
+const date = today.getDate(); // 일
+const month_english = today.toLocaleString('default', { month: 'long' });
 
 export default defineComponent({
   name: 'MonthDark',
@@ -49,6 +49,8 @@ export default defineComponent({
     return {
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       selectedDate: year + '-' + month + '-' + date,
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      now: year + '년 ' + month_english,
     };
   },
   methods: {
@@ -79,6 +81,11 @@ export default defineComponent({
     onClickDay(data) {
       // calendar의 날짜(공백) 부분 클릭했을 때
       console.log('onClickDay', data);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // const date_data = data.scope.timestamp.date;
+      // console.log(date_data);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // void this.$router.push({ path: '/day', params: { pickDate: date_data } });
     },
     onClickHeadDay(data) {
       // 요일 클릭
