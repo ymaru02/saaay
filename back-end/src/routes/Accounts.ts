@@ -1,9 +1,5 @@
 import { Router } from "express";
-
-import {
-  getFollowerList,
-} from "../controllers/Accounts";
-
+import { getFollowerList } from "../controllers/Accounts";
 const router = Router();
 
 router.get("/:id/follower/", getFollowerList);
