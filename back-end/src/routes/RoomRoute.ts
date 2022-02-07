@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { createRoom } from "../controllers/RoomController";
+import { createRoom, getRooms } from "../controllers/RoomController";
 
 const router = Router();
-const roomRouter: string = "/room";
-router.post(roomRouter, createRoom);
+const roomRouter: string = "/";
+router.post("/", createRoom);
+router.get("/list", getRooms);
 
 export default router;

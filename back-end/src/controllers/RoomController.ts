@@ -5,23 +5,28 @@ import { RoomService } from "../services/RoomService";
 const roomService = new RoomService();
 
 export const createRoom: RequestHandler = (req, res, next) => {
-  console.log("createRoom");
+  // console.log("createRoom");
   const roomName = (req.body as { roomName: string }).roomName;
+  // console.log("roomName : ", roomName);
   const category = (req.body as { category: string[] }).category;
+  // console.log("category : ", category);
   const moderator = (req.body as { moderator: string[] }).moderator;
+  // console.log("moderator : ", moderator);
   const notice = (req.body as { notice: string }).notice;
+  // console.log("notice : ", notice);
+  console.log("body = ", req.body);
 
   const newRoom = roomService.createRoom(roomName, category, moderator, notice);
-
+  // console.log("controller test", roomName, notice);
   res.status(201).json({ message: "Created the new Room.", createRoom: newRoom });
 };
-/*
-export const getTodos: RequestHandler = (req, res, next) => {
-  console.log("getTodos");
-  const todos = sampleService.getTodos();
-  res.json({ todos: todos });
+
+export const getRooms: RequestHandler = (req, res, next) => {
+  console.log("getRooms");
+  const rooms = roomService.getRooms();
+  // console.log(rooms);
+  res.json({ rooms: rooms });
 };
-*/
 
 /*
 export const updateTodo: RequestHandler<{ id: string }> = (req, res, next) => {
