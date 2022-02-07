@@ -8,14 +8,9 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/month',
+    path: '/calendar',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/CalendarMonth.vue') }],
-  },
-  {
-    path: '/day/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/CalenderDay.vue') }],
+    children: [{ path: '', component: () => import('src/pages/Calendar.vue') }],
   },
   // Always leave this as last one,
   // but you can also remove it
