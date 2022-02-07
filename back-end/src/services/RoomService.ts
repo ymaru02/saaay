@@ -5,11 +5,11 @@ import { Room } from "../models/RoomModel";
 const ROOMS: Room[] = [];
 
 export class RoomService {
-  private ROOMS: Room[];
+  // private ROOMS: Room[];
   private generateId = 0;
 
   constructor() {
-    this.ROOMS = [];
+    // this.ROOMS = [];
   }
 
   public createRoom(
@@ -21,12 +21,12 @@ export class RoomService {
     const newRoom = new Room(this.generateId.toString(), roomName, category, moderator, notice);
     console.log(newRoom);
     this.generateId++;
-    this.ROOMS.push(newRoom);
+    ROOMS.push(newRoom);
     return newRoom;
   } // end CreateRoom
 
   public getRooms(): Room[] {
-    return this.ROOMS;
+    return ROOMS;
   }
 
   /*
