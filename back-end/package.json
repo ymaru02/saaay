@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/neo4j": "^2.0.3",
     "@types/node": "^17.0.14",
     "nodemon": "^2.0.15"
   },
