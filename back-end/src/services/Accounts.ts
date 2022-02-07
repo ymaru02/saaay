@@ -45,7 +45,7 @@ export class Accounts {
 
     try {
       result = await session.run(
-        `MATCH (me) <- [:FOLLOW] - (target) WHERE id(me) = ${targetId} RETURN target`
+        `MATCH (me) - [:FOLLOW] -> (target) WHERE id(me) = ${targetId} RETURN target`
       );
       const followerList = [];
 
