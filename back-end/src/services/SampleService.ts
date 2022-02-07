@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 
-import { Todo } from "../models/SampleRepository";
+import { Todo } from "../models/Sample";
+import { getTest } from "../repository/SampleRepository";
 
 const TODOS: Todo[] = [];
 
@@ -22,6 +23,7 @@ export class SampleService {
   }
 
   public getTodos(): Todo[] {
+    getTest();
     return this.TODOS;
   }
 

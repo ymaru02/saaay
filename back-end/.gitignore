@@ -2,3 +2,4 @@ node_modules
 dist
 .idea
 db-config.json
+mariadb-config.json

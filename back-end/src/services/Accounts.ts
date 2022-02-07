@@ -1,6 +1,11 @@
 import { RequestHandler } from "express";
 import db_config from "../config/db-config.json";
 
+function test(): {selectedDate: string} {
+    return {
+      selectedDate: "123"
+    }
+}
 export class Accounts {
   neo4j = require("neo4j-driver");
   uri = db_config.uri;
@@ -31,7 +36,11 @@ export class Accounts {
 
     await driver.close();
 
-    return result.records;
+    // return result.records;
+    
+    return {
+      selectedDate: 11
+    }
   }
 
   public async getFollowingList(targetId: string) {
