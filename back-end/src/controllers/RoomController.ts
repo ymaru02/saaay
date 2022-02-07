@@ -13,7 +13,7 @@ export const createRoom: RequestHandler = (req, res, next) => {
 
   const newRoom = roomService.createRoom(roomName, category, moderator, notice);
 
-  res.status(201).json({ message: "Created the todo.", createRoom: newRoom });
+  res.status(201).json({ message: "Created the new Room.", createRoom: newRoom });
 };
 /*
 export const getTodos: RequestHandler = (req, res, next) => {
