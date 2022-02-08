@@ -1,15 +1,15 @@
-import { Todo } from "../models/Sample";
-import { pool } from "./connection-pools/Mariadb";
+import { TodoDto } from '../models/todo.dto';
+import { pool } from './connection-pools/maria.db';
 
 export async function getTest() {
   let conn;
   try {
     conn = await pool.getConnection();
-    const rows = await conn.query("SELECT * from test");
+    const rows = await conn.query('SELECT * from test');
     console.log(rows);
     console.log(rows[0]);
     console.log(typeof rows);
-    
+
     // rows.array.map(
     //   (row: { id: string; test: string }) => new Todo(row.id, row.test)
     // );
