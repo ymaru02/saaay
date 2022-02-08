@@ -37,3 +37,4 @@ lerna-debug.log*
 # Config Files
 db-config.json
 mariadb-config.json
+ormconfig.json
