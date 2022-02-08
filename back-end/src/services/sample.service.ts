@@ -13,12 +13,11 @@ export class SampleService {
   private generateId = 0;
 
   constructor(
-    @InjectRepository(TestTodo) private todoRepository: Repository<TestTodo>,
-    @InjectRepository(TestUser) private userRepository: Repository<TestUser>,
-  ) {
-    this.todoRepository = todoRepository;
-    this.userRepository = userRepository;
-  }
+    @InjectRepository(TestTodo)
+    private readonly todoRepository: Repository<TestTodo>,
+    @InjectRepository(TestUser)
+    private readonly userRepository: Repository<TestUser>,
+  ) {}
 
   /**
    * User 조회
