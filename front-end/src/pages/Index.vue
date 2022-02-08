@@ -44,13 +44,56 @@
       </div>
     </div>
   </section>
+
+  <!-- software -->
+  <section class="software">
+    <div class="inner">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="images/logo-vue.png" alt="vue" />
+          </div>
+          <div class="swiper-slide">
+            <img src="images/logo-quasar.png" alt="quasar" />
+          </div>
+          <div class="swiper-slide">
+            <img src="images/logo-Typescript.png" alt="Typescript" />
+          </div>
+          <div class="swiper-slide">
+            <img src="images/logo-openvidu.png" alt="openvidu" />
+          </div>
+          <div class="swiper-slide">
+            <img src="images/logo-nodejs.png" alt="nodejs" />
+          </div>
+          <div class="swiper-slide">
+            <img src="images/logo-Neo4j.png" alt="Neo4j" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
+// Import Swiper Vue.js components
+import { Swiper } from 'swiper';
+// Import Swiper styles
+import 'swiper/css';
 import gsap from 'gsap';
 
 export default {
   mounted() {
+    new Swiper('.software .swiper-container', {
+      autoplay: {
+        // 자동 재생 여부
+        delay: 5000, // 5초마다 슬라이드 바뀜
+      },
+      loop: true, // 반복 재생 여부
+      slidesPerView: 3, // 한 번에 보여줄 슬라이드 개수
+      spaceBetween: 10, // 슬라이드 사이 여백
+      centeredSlides: true, // 1번 슬라이드가 가운데 보이기
+    });
+
     /**
      * 순서대로 나타나는 기능
      */
@@ -73,7 +116,6 @@ export default {
 <style scoped>
 /*VISUAL*/
 .visual {
-  margin-top: 120px;
   background-image: url('../../public/images/cover_macbook3.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -123,5 +165,20 @@ export default {
 }
 .visual .fade-in {
   opacity: 0;
+}
+
+/*  SOFTWARE  */
+.software {
+}
+.software .inner {
+  padding: 40px 0;
+}
+.software .swiper-container {
+  width: 100%;
+  height: 128px;
+  overflow: hidden;
+}
+.software .swiper-container img {
+  margin: auto;
 }
 </style>
