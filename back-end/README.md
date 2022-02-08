@@ -71,3 +71,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Directory Summary
+
+- main.ts : 루트 파일. 여기에 모든걸 import 하고 실행한다
+- app.module : 개발에 사용된 모듈을 담는 파일
+- controllers : service 를 import 하고 매핑된 url 에 따라 함수를 정의하고 service 계층의 핵심 로직을 실행시킨다
+- services : repository (Database 계층) 를 import 하고 로직에 따라 repository 의 쿼리를 실행시킨다
+- repository : DB 연결 및 CRUD 를 담당한다
+- models : 필요한 DTO 및 DAO 를 정의한다
