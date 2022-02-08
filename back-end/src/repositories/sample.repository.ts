@@ -1,6 +1,6 @@
-import { TodoDto } from '../models/todo.dto';
 import { pool } from './connection-pools/maria.db';
 
+// 기존 쿼리 방식
 export async function getTest() {
   let conn;
   try {
