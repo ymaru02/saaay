@@ -1,4 +1,9 @@
+import { TestTodo } from 'src/entity/sample/todo.entity';
+import { EntityRepository, Repository } from 'typeorm';
 import { pool } from './connection-pools/maria.db';
+
+@EntityRepository(TestTodo)
+export class TodoRepository extends Repository<TestTodo> {}
 
 // 기존 쿼리 방식
 export async function getTest() {

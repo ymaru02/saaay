@@ -13,4 +13,5 @@ export class TestTodo {
   // 다대일 양방향 매핑 (user <-> todo)
   @ManyToOne(() => TestUser, (user) => user.todos)
   user: TestUser;
+  newTodo: Promise<TestUser>;
 }
