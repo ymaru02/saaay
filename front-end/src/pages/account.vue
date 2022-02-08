@@ -20,13 +20,54 @@
 
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="followers">
-              <div class="text-h6">Name</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <div class="row">
+                <div class="col-1 row">
+                  <div class="col-8 offset-2">
+                    <img
+                      src="images/blank-profile-picture.png"
+                      alt="profile-image"
+                      class="profile"
+                    />
+                  </div>
+                </div>
+                <div class="col-9 q-pl-lg row">
+                  <div class="col-12 row flex items-end">
+                    <div class="text-h5">Name</div>
+                    <div class="q-ml-lg">Follows You</div>
+                  </div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  </p>
+                </div>
+                <div class="col-2 flex flex-center">
+                  <q-btn unelevated rounded color="primary" label="FOLLOW" />
+                </div>
+              </div>
             </q-tab-panel>
 
             <q-tab-panel name="following">
-              <div class="text-h6">Name</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <div class="row">
+                <div class="col-1 row">
+                  <div class="col-8 offset-2">
+                    <img
+                      src="images/blank-profile-picture.png"
+                      alt="profile-image"
+                      class="profile"
+                    />
+                  </div>
+                </div>
+                <div class="col-9 q-pl-lg row">
+                  <div class="col-12 row flex items-end">
+                    <div class="text-h5">Name</div>
+                  </div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  </p>
+                </div>
+                <div class="col-2 flex flex-center">
+                  <q-btn outline rounded color="primary" label="FOLLOWING" />
+                </div>
+              </div>
             </q-tab-panel>
           </q-tab-panels>
         </q-card>
@@ -46,3 +87,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.profile {
+  border-radius: 100%;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+</style>
