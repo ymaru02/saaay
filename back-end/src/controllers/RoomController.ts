@@ -14,9 +14,10 @@ export const createRoom: RequestHandler = (req, res, next) => {
   // console.log("moderator : ", moderator);
   const notice = (req.body as { notice: string }).notice;
   // console.log("notice : ", notice);
+  const participates = (req.body as { participates: string[] }).participates;
   console.log("body = ", req.body);
 
-  const newRoom = roomService.createRoom(roomName, category, moderator, notice);
+  const newRoom = roomService.createRoom(roomName, category, moderator, notice, participates);
   // console.log("controller test", roomName, notice);
   res.status(201).json({ message: "Created the new Room.", createRoom: newRoom });
 };
@@ -28,8 +29,17 @@ export const getRooms: RequestHandler = (req, res, next) => {
   res.json({ rooms: rooms });
 };
 
+export const getRoom: RequestHandler<{ id: string }> = (req, res, next) => {
+  console.log("getRoom");
+  const roomId = req.params.id;
+
+  const room = roomService.getRoom(roomId);
+
+  res.json({ room: room });
+};
+
 /*
-export const updateTodo: RequestHandler<{ id: string }> = (req, res, next) => {
+export const updateRoom: RequestHandler<{ id: string }> = (req, res, next) => {
   console.log("updateTodo");
   const todoId = req.params.id;
 
@@ -37,17 +47,16 @@ export const updateTodo: RequestHandler<{ id: string }> = (req, res, next) => {
 
   console.log("id: ", todoId);
 
-  const updatedTodo = sampleService.updateTodo(todoId, updatedText);
+  const updatedTodo = roomService.updateRoom(todoId, updatedText);
 
   res.json({ message: "Updated!", updatedTodo: updatedTodo });
 };
-
-export const deleteTodo: RequestHandler<{ id: string }> = (req, res, next) => {
+*/
+export const deleteRoom: RequestHandler<{ id: string }> = (req, res, next) => {
   console.log("deleteTodo");
   const todoId = req.params.id;
 
-  sampleService.deleteTodo(todoId);
+  roomService.deleteRoom(todoId);
 
-  res.json({ message: "Todo deleted!" });
+  res.json({ message: "Room deleted!" });
 };
-*/

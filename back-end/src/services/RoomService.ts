@@ -16,9 +16,17 @@ export class RoomService {
     roomName: string,
     category: string[],
     moderator: string[],
-    notice: string
+    notice: string,
+    participates: string[]
   ): Room {
-    const newRoom = new Room(this.generateId.toString(), roomName, category, moderator, notice);
+    const newRoom = new Room(
+      this.generateId.toString(),
+      roomName,
+      category,
+      moderator,
+      notice,
+      participates
+    );
     console.log(newRoom);
     this.generateId++;
     ROOMS.push(newRoom);
@@ -29,27 +37,39 @@ export class RoomService {
     return ROOMS;
   }
 
+  public getRoom(id: string): Room {
+    const roomIndex = ROOMS.findIndex((room) => room.id === id);
+    if (roomIndex < 0) {
+      throw new Error("Could not find room!");
+    }
+    return ROOMS[roomIndex];
+  }
   /*
-  public updateTodo(id: string, text: string): Todo {
-    const todoIndex = this.TODOS.findIndex((todo) => todo.id === id);
+  public updateRoom(
+    roomName: string,
+    category: string[],
+    moderator: string[],
+    notice: string,
+    participates: string[]
+  ): Room {
+    const roomIndex = ROOMS.findIndex((room) => room.id === id);
 
     if (todoIndex < 0) {
       throw new Error("Could not find todo!");
     }
 
-    this.TODOS[todoIndex] = new Todo(this.TODOS[todoIndex].id, text);
+    ROOMS[todoIndex] = new ROOM(ROOMS[todoIndex].id, text);
 
-    return this.TODOS[todoIndex];
+    return ROOMS[todoIndex];
   }
-
-  public deleteTodo(id: string): void {
-    const todoIndex = this.TODOS.findIndex((todo) => todo.id === id);
+*/
+  public deleteRoom(id: string): void {
+    const todoIndex = ROOMS.findIndex((room) => room.id === id);
 
     if (todoIndex < 0) {
-      throw new Error("Could not find todo!");
+      throw new Error("Could not find room!");
     }
 
-    this.TODOS.splice(todoIndex, 1);
+    ROOMS.splice(todoIndex, 1);
   }
-  */
 }
