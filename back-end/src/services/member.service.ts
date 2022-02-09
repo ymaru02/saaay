@@ -6,11 +6,11 @@ import { MemberRepository } from 'src/repositories/member.repository';
 export class MemberService {
   constructor(private readonly memberRepository: MemberRepository) {}
 
-  public async findMember(memberId: string): Promise<MemberDto> {
-    let memberDto;
-    await this.memberRepository.findMemberById(memberId).then((m) => {
-      memberDto = m;
-    });
-    return memberDto;
-  }
+  // public async findMember(memberId: string): Promise<MemberDto> {
+  //   let memberDto;
+  //   await this.memberRepository.findMemberById(memberId).then((m) => {
+  //     memberDto = m;
+  //   });
+  //   return memberDto;
+  // }
 }

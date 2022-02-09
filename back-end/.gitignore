@@ -37,3 +37,4 @@ lerna-debug.log*
 # Config Files
 neo4j-config.json
 mariadb-config.json
+ormconfig.json
