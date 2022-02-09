@@ -32,22 +32,13 @@
             <!-- Right Tab-menu -->
             <div class="tab-menu">
               <q-tabs align="right">
-                <q-route-tab class="item" to="/page1" label="Page One" />
-                <q-route-tab class="item" to="/page2" label="Page Two" />
+                <q-route-tab class="item" to="/" label="Main" />
+                <q-route-tab class="item" to="/calendar" label="Calendar" />
                 <q-route-tab class="item" to="/page3" label="Page Three" />
               </q-tabs>
             </div>
           </div>
         </q-toolbar>
-      </div>
-      <!--BADGES-->
-      <div class="badges">
-        <div class="badge">
-          <img src="images/badge1.png" alt="Badge1" />
-        </div>
-        <div class="badge">
-          <img src="images/badge2.png" alt="Badge2" />
-        </div>
       </div>
     </q-header>
 
@@ -83,8 +74,8 @@
       </div>
     </footer>
     <!--TO TOP BUTTON-->
-    <div id="to-top">
-      <div @click="bottomclick" class="material-icons">arrow_upward</div>
+    <div @click="bottomclick" id="to-top">
+      <div class="material-icons">arrow_upward</div>
     </div>
   </q-layout>
 </template>
@@ -99,8 +90,8 @@ export default {
      * 페이지 스크롤에 따른 요소 제어
      */
     // 페이지 스크롤에 영향을 받는 요소들을 검색!
-    const badgeEl = document.querySelector('header .badges') as HTMLDivElement;
     const toTopEl = document.querySelector('#to-top') as HTMLDivElement;
+
     // 페이지에 스크롤 이벤트를 추가!
     // 스크롤이 지나치게 자주 발생하는 것을 조절(throttle, 일부러 부하를 줌)
     window.addEventListener(
@@ -108,25 +99,13 @@ export default {
       _.throttle(function () {
         // 페이지 스크롤 위치가 500px이 넘으면.
         if (window.scrollY > 500) {
-          // Badge 요소 숨기기!
-          gsap.to(badgeEl, 0.6, {
-            opacity: 0,
-            display: 'none',
-          });
           // 상단으로 스크롤 버튼 보이기!
           gsap.to(toTopEl, 0.2, {
             opacity: 1,
-
             x: 0,
           });
-
           // 페이지 스크롤 위치가 500px이 넘지 않으면.
         } else {
-          // Badge 요소 보이기!
-          gsap.to(badgeEl, 0.6, {
-            opacity: 1,
-            display: 'block',
-          });
           // 상단으로 스크롤 버튼 숨기기!
           gsap.to(toTopEl, 0.2, {
             opacity: 0,
@@ -135,6 +114,7 @@ export default {
         }
       }, 300)
     );
+
     /**
      * 올해가 몇 년도인지 계산
      */
@@ -143,16 +123,14 @@ export default {
   },
 
   methods: {
+    /**       * 검색창 제어       */
+    // 검색창 요소(.search) 찾기.
     search() {
-      /**       * 검색창 제어       */
-      // 검색창 요소(.search) 찾기.
       const searchEl = document.querySelector('.search') as HTMLDivElement;
 
       const searchInputEl = searchEl.querySelector('input') as HTMLDivElement;
       // 검색창 요소를 클릭하면 실행.
-      searchEl.addEventListener('click', function () {
-        searchInputEl.focus();
-      });
+      searchInputEl.focus();
       // 검색창 요소 내부 실제 input 요소에 포커스되면 실행.
       searchInputEl.addEventListener('focus', function () {
         searchEl.classList.add('focused');
@@ -165,15 +143,13 @@ export default {
       });
     },
 
+    // 상단으로 스크롤 버튼을 클릭하면,
     bottomclick() {
-      // 상단으로 스크롤 버튼을 클릭하면,
-      const toTopEl = document.querySelector('#to-top') as HTMLDivElement;
-      toTopEl.addEventListener('click', function () {
-        // 페이지 위치를 최상단으로 부드럽게(0.7초 동안) 이동.
-        gsap.to(window, 0.7, {
-          scrollTo: 0,
-        });
+      // 페이지 위치를 최상단으로 부드럽게(0.7초 동안) 이동.
+      gsap.to(window, 0.7, {
+        scrollTo: 0,
       });
+      // });
     },
   },
 };

@@ -1,4 +1,14 @@
 <template>
+  <!--BADGES-->
+  <div class="badges">
+    <div class="badge">
+      <img src="images/badge1.png" alt="Badge1" />
+    </div>
+    <div class="badge">
+      <img src="images/badge2.png" alt="Badge2" />
+    </div>
+  </div>
+
   <!--VISUAL-->
   <section class="visual">
     <div class="q-pa-md">
@@ -116,6 +126,7 @@
 <script lang="ts">
 // Import Swiper Vue.js components
 import { Swiper } from 'swiper';
+import * as _ from 'lodash';
 // Import Swiper styles
 import 'swiper/css';
 import gsap from 'gsap';
@@ -123,8 +134,34 @@ import ScrollMagic from 'scrollmagic';
 
 export default {
   mounted() {
+    //  * 페이지 스크롤에 따른 요소 제어
+    // 페이지 스크롤에 영향을 받는 요소들을 검색!
+    const badgeEl = document.querySelector('.badges') as HTMLDivElement;
+
+    // 페이지에 스크롤 이벤트를 추가!
+    // 스크롤이 지나치게 자주 발생하는 것을 조절(throttle, 일부러 부하를 줌)
+    window.addEventListener(
+      'scroll',
+      _.throttle(function () {
+        // 페이지 스크롤 위치가 500px이 넘으면.
+        if (window.scrollY > 500) {
+          // Badge 요소 숨기기!
+          gsap.to(badgeEl, 0.6, {
+            opacity: 0,
+            display: 'none',
+          });
+          // 페이지 스크롤 위치가 500px이 넘지 않으면.
+        } else {
+          // Badge 요소 보이기!
+          gsap.to(badgeEl, 0.6, {
+            opacity: 1,
+            display: 'block',
+          });
+        }
+      }, 300)
+    );
+
     new Swiper('.software .swiper-container', {
-      speed: 400,
       autoplay: {
         // 자동 재생 여부
         delay: 500, // 5초마다 슬라이드 바뀜
@@ -135,12 +172,9 @@ export default {
       centeredSlides: true, // 1번 슬라이드가 가운데 보이기
     });
 
-    /**
-     * 순서대로 나타나는 기능
-     */
+    //  * 순서대로 나타나는 기능
     // 나타날 요소들(.fade-in) 찾기.
     const fadeEls = document.querySelectorAll('.visual .fade-in');
-    // 수정할 부분
     // 나타날 요소들을 하나씩 반복해서 처리!
     fadeEls.forEach(function (fadeEl, index) {
       // 각 요소들을 순서대로(delay) 보여지게 함!
@@ -150,9 +184,7 @@ export default {
       });
     });
 
-    /**
-     * 요소가 화면에 보여짐 여부에 따른 요소 관리
-     */
+    //  * 요소가 화면에 보여짐 여부에 따른 요소 관리
     // 관리할 요소들 검색!
     const spyEls = document.querySelectorAll('section.scroll-spy');
     // 요소들 반복 처리!
@@ -170,6 +202,20 @@ export default {
 </script>
 
 <style scoped>
+/*BADGES*/
+.badges {
+  position: fixed;
+  top: 132px;
+  right: 12px;
+}
+.badges .badge {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
 /*VISUAL*/
 .visual {
   margin-bottom: 40px;
@@ -328,5 +374,4 @@ export default {
 .description-3 .text-group .title {
   margin-bottom: 40px;
 }
-/*SCROLL TO TOP*/
 </style>
