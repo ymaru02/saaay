@@ -1,8 +1,10 @@
 import { TodoDto } from '../models/todo.dto';
-import { pool } from './connection-pools/maria.db';
+import mariadb from 'mariadb';
+import mariadb_config from '../config/mariadb-config.json';
 
 export async function getTest() {
   let conn;
+  const pool = mariadb.createPool(mariadb_config);
   try {
     conn = await pool.getConnection();
     const rows = await conn.query('SELECT * from test');
