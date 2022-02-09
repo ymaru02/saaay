@@ -1216,18 +1216,6 @@
   "resolved" "https://registry.npmjs.org/@quasar/fastclick/-/fastclick-1.1.4.tgz"
   "version" "1.1.4"
 
-"@quasar/quasar-app-extension-qcalendar@^4.0.0-beta.12":
-  "integrity" "sha512-YRnKdlXWZSdEmiVMiukknTZrDVpcpm3NJT5SSpfe/NUfVrAPBCEOWwV89p8GguKxRIFVoU8RVOXNp6XahZ2OZg=="
-  "resolved" "https://registry.npmjs.org/@quasar/quasar-app-extension-qcalendar/-/quasar-app-extension-qcalendar-4.0.0-beta.12.tgz"
-  "version" "4.0.0-beta.12"
-  dependencies:
-    "@quasar/quasar-ui-qcalendar" "^4.0.0-beta.12"
-
-"@quasar/quasar-ui-qcalendar@^4.0.0-beta.12":
-  "integrity" "sha512-Sh/IEAkPnuDTyPexQMDKCVhlpwGKNdI2b8WUjPxtF0aHmeyR3anXyxqkJQGMEd37zmi9zEyR1ah2UPOD9e2VMA=="
-  "resolved" "https://registry.npmjs.org/@quasar/quasar-ui-qcalendar/-/quasar-ui-qcalendar-4.0.0-beta.12.tgz"
-  "version" "4.0.0-beta.12"
-
 "@quasar/ssr-helpers@2.1.1":
   "integrity" "sha512-Roe0bvnXDtSUvB6XMyAKAA6tsEikoVgSS4nLJptm4IPx1ylIj5KTwDtwuDr083cq9Pb4jCdmpj9wqz365NamLw=="
   "resolved" "https://registry.npmjs.org/@quasar/ssr-helpers/-/ssr-helpers-2.1.1.tgz"
