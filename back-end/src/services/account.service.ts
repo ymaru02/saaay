@@ -1,10 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { getFollowerList } from '../repositories/account.repository';
+import {
+  getFollowerList,
+  getFollowingList,
+} from '../repositories/account.repository';
 
 @Injectable()
 export class AccountService {
   public async getFollowerList(targetId: string) {
     const result = await getFollowerList(targetId);
+    return result;
+  }
+
+  public async getFollowingList(targetId: string) {
+    const result = await getFollowingList(targetId);
     return result;
   }
 }

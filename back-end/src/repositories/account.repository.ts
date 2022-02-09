@@ -8,11 +8,23 @@ export async function getFollowerList(targetId: string) {
     result = await session.run(
       `MATCH (me) <- [:FOLLOW] - (target) WHERE id(me) = ${targetId} RETURN target`,
     );
-    const followerList = [];
+  } finally {
+    await session.close();
+  }
 
-    for (const record of result.records) {
-      followerList.push(record._fields[0]);
-    }
+  await driver().close();
+
+  return result.records;
+}
+
+export async function getFollowingList(targetId: string) {
+  let result;
+  const session = driver().session();
+
+  try {
+    result = await session.run(
+      `MATCH (me) - [:FOLLOW] -> (target) WHERE id(me) = ${targetId} RETURN target`,
+    );
   } finally {
     await session.close();
   }

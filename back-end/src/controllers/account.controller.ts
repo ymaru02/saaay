@@ -25,6 +25,15 @@ export class AccountController {
     const followerList = await this.accountService.getFollowerList(targetId);
     res.status(HttpStatus.OK).json(followerList);
   }
+
+  @Get(':targetId/following')
+  async getFollowingList(
+    @Param('targetId') targetId: string,
+    @Res() res: Response,
+  ) {
+    const followerList = await this.accountService.getFollowingList(targetId);
+    res.status(HttpStatus.OK).json(followerList);
+  }
 }
 
 // import { RequestHandler } from 'express';
