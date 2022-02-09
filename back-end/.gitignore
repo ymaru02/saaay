@@ -35,5 +35,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Config Files
-db-config.json
+neo4j-config.json
 mariadb-config.json
