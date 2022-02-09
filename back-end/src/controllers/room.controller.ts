@@ -49,22 +49,6 @@ export class RoomController {
     res.status(HttpStatus.OK).json(JSON.stringify(Rooms));
   }
 
-  // getRooms: RequestHandler = (req, res, next) => {
-  //   console.log('getRooms');
-  //   const rooms = roomService.getRooms();
-  //   // console.log(rooms);
-  //   res.json({ rooms: rooms });
-  // };
-
-  // getRoom: RequestHandler<{ id: string }> = (req, res, next) => {
-  //   console.log('getRoom');
-  //   const roomId = req.params.id;
-
-  //   const room = roomService.getRoom(roomId);
-
-  //   res.json({ room: room });
-  // };
-
   @Get('/:Id')
   getRoom(@Param('Id') Id: string, @Res() res: Response) {
     console.log('/getRoom');
@@ -73,31 +57,24 @@ export class RoomController {
     res.status(HttpStatus.OK).json(JSON.stringify(Room));
   }
 
-  /*
-  export const updateRoom: RequestHandler<{ id: string }> = (req, res, next) => {
-    console.log("updateTodo");
-    const todoId = req.params.id;
-  
-    const updatedText = (req.body as { text: string }).text;
-  
-    console.log("id: ", todoId);
-  
-    const updatedTodo = roomService.updateRoom(todoId, updatedText);
-  
-    res.json({ message: "Updated!", updatedTodo: updatedTodo });
-  };
-  */
+  @Patch(':Id')
+  updateRoom(
+    @Param('Id') Id: string,
+    @Body()
+    params: {
+      roomName: string;
+      category: string[];
+      moderator: string[];
+      notice: string;
+      participates: string[];
+    },
+    @Res() res: Response,
+  ) {
+    console.log('updateRoom');
+    const room = this.roomService.updateRoom(Id, params);
 
-  /*
-  deleteRoom: RequestHandler<{ id: string }> = (req, res, next) => {
-    console.log('deleteTodo');
-    const todoId = req.params.id;
-
-    roomService.deleteRoom(todoId);
-
-    res.json({ message: 'Room deleted!' });
-  };
-  */
+    res.status(HttpStatus.OK).json({ message: room });
+  }
 
   @Delete('/:Id')
   deleteRoom(@Param('Id') Id: string, @Res() res: Response) {

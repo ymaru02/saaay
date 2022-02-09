@@ -41,25 +41,25 @@ export class RoomService {
     }
     return this.ROOMS[roomIndex];
   }
-  /*
-  public updateRoom(
-    roomName: string,
-    category: string[],
-    moderator: string[],
-    notice: string,
-    participates: string[]
-  ): Room {
-    const roomIndex = ROOMS.findIndex((room) => room.id === id);
 
-    if (todoIndex < 0) {
-      throw new Error("Could not find todo!");
+  public updateRoom(id: string, params: any): Room {
+    const roomIndex = this.ROOMS.findIndex((room: Room) => room.id === id);
+    if (roomIndex < 0) {
+      throw new Error('Could not find Room to update!');
     }
 
-    ROOMS[todoIndex] = new ROOM(ROOMS[todoIndex].id, text);
+    this.ROOMS[roomIndex] = new Room(
+      id,
+      params.roomName,
+      params.category,
+      params.moderator,
+      params.notice,
+      params.participates,
+    );
 
-    return ROOMS[todoIndex];
+    return this.ROOMS[roomIndex];
   }
-*/
+
   public deleteRoom(id: string): void {
     const todoIndex = this.ROOMS.findIndex((room) => room.id === id);
 
