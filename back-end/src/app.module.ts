@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SampleService } from './services/sample.service';
 import { SampleController } from './controllers/sample.controller';
+import { RoomController } from './controllers/room.controller';
+import { RoomService } from './services/room.service';
 // import { Neo4jModule } from './neo4j/neo4j.module';
 
 @Module({
@@ -15,7 +17,7 @@ import { SampleController } from './controllers/sample.controller';
   //   password: 'neo4j',
   //   }),
   // ],
-  controllers: [AppController, SampleController],
-  providers: [AppService, SampleService],
+  controllers: [AppController, SampleController, RoomController],
+  providers: [AppService, SampleService, RoomService],
 })
 export class AppModule {}
