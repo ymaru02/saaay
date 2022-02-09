@@ -10,12 +10,6 @@ export class AppController {
     private readonly sampleService: SampleService,
   ) {}
 
-  // @Get()
-  // async getHello(): Promise<string> {
-  //   const greeting = await this.appService.getHello()
-  //   return greeting
-  // }
-
   @Get('/sample')
   getSample(): TodoDto[] {
     return this.sampleService.getTodos();
