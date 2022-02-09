@@ -1,23 +1,19 @@
-import { RequestHandler } from "express";
-import { Todo } from "../models/SampleRepository";
-import { Room } from "../models/RoomModel";
+import { Injectable } from '@nestjs/common';
 
-const ROOMS: Room[] = [];
+import { Room } from '../models/RoomModel';
 
+// const ROOMS: Room[] = [];
+@Injectable()
 export class RoomService {
-  // private ROOMS: Room[];
+  private ROOMS: Room[] = [];
   private generateId = 0;
-
-  constructor() {
-    // this.ROOMS = [];
-  }
 
   public createRoom(
     roomName: string,
     category: string[],
     moderator: string[],
     notice: string,
-    participates: string[]
+    participates: string[],
   ): Room {
     const newRoom = new Room(
       this.generateId.toString(),
@@ -25,24 +21,25 @@ export class RoomService {
       category,
       moderator,
       notice,
-      participates
+      participates,
     );
     console.log(newRoom);
     this.generateId++;
-    ROOMS.push(newRoom);
+    this.ROOMS.push(newRoom);
     return newRoom;
   } // end CreateRoom
 
   public getRooms(): Room[] {
-    return ROOMS;
+    // console.log('rooms : ', this.ROOMS);
+    return this.ROOMS;
   }
 
   public getRoom(id: string): Room {
-    const roomIndex = ROOMS.findIndex((room) => room.id === id);
+    const roomIndex = this.ROOMS.findIndex((room) => room.id === id);
     if (roomIndex < 0) {
-      throw new Error("Could not find room!");
+      throw new Error('Could not find room!');
     }
-    return ROOMS[roomIndex];
+    return this.ROOMS[roomIndex];
   }
   /*
   public updateRoom(
@@ -64,12 +61,12 @@ export class RoomService {
   }
 */
   public deleteRoom(id: string): void {
-    const todoIndex = ROOMS.findIndex((room) => room.id === id);
+    const todoIndex = this.ROOMS.findIndex((room) => room.id === id);
 
     if (todoIndex < 0) {
-      throw new Error("Could not find room!");
+      throw new Error('Could not find room!');
     }
 
-    ROOMS.splice(todoIndex, 1);
+    this.ROOMS.splice(todoIndex, 1);
   }
 }
