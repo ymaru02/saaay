@@ -12,6 +12,9 @@ export class UserCustomRepository {
 
   findByUsername(userName: string): Promise<User> {
     // return this.findOneOrFail({ where: { username: userName } });
-    return this.userRepository.findOne({ username: userName });
+    return this.userRepository.findOne({
+      relations: ['role'],
+      where: { username: userName },
+    });
   }
 }

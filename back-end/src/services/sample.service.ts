@@ -56,7 +56,22 @@ export class SampleService {
     metadata.orientation = 'portrait';
     metadata.photo = photo;
 
+    // await this.photoRepository.save(photo);
     await this.metaRepository.save(metadata);
+  }
+
+  public async getPhotoWithMetadata() {
+    const photo = await this.photoRepository.find({
+      relations: ['metadata'],
+    });
+    console.log(photo);
+    const one = await this.photoRepository.findOne({
+      relations: ['metadata'],
+      where: {
+        id: 1,
+      },
+    });
+    console.log(one);
   }
 
   /**

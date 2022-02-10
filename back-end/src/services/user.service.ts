@@ -31,12 +31,12 @@ export class UserService {
   }
 
   public async findUserByName(userName: string): Promise<UserDto> {
-    await this.userCustomRepository.findByUsername(userName).then((user) => {
-      console.log(user);
+    try {
+      const user = await this.userCustomRepository.findByUsername(userName);
       const userDto = new UserDto(user);
-      console.log(userDto);
       return userDto;
-    });
-    throw new Error();
+    } catch (err) {
+      throw err;
+    }
   }
 }

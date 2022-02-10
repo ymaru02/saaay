@@ -148,4 +148,10 @@ export class SampleController {
       res.status(HttpStatus.OK).send();
     });
   }
+
+  @Get('photos')
+  async get(@Res() res: Response) {
+    await this.sampleService.getPhotoWithMetadata();
+    res.status(HttpStatus.OK).send();
+  }
 }

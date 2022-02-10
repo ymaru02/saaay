@@ -33,6 +33,5 @@ export class User {
 
   // 다대일 단방향 매핑
   @ManyToOne(() => Role)
-  @JoinColumn({ name: 'roleId' })
   role: Role;
 }
