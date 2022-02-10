@@ -1,5 +1,5 @@
 {
-  "uri": "bolt://localhost:7687",
-  "user": "ssafy",
+  "uri": "i6b203.p.ssafy.io:7687",
+  "username": "neo4j",
   "password": "ssafy"
 }
