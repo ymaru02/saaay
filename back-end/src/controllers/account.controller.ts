@@ -80,4 +80,19 @@ export class AccountController {
       res.status(400).send();
     }
   }
+
+  @Delete(':targetId/block')
+  async deleteMyBlockList(
+    @Param('targetId') targetId: string,
+    @Res() res: Response,
+  ) {
+    // 로그인 기능 연결 후 로그인한 유저 Id 로 변경
+    const myId = '4';
+    const result = await this.accountService.deleteMyBlockList(targetId, myId);
+    if (result) {
+      res.status(204).send();
+    } else {
+      res.status(400).send();
+    }
+  }
 }

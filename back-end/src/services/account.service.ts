@@ -5,6 +5,7 @@ import {
   addFollow,
   deleteFollow,
   addBlock,
+  deleteBlock,
 } from '../repositories/account.repository';
 
 @Injectable()
@@ -31,6 +32,11 @@ export class AccountService {
 
   public async addMyBlockList(targetId: string, myId: string) {
     const result = await addBlock(targetId, myId);
+    return result;
+  }
+
+  public async deleteMyBlockList(targetId: string, myId: string) {
+    const result = await deleteBlock(targetId, myId);
     return result;
   }
 }
