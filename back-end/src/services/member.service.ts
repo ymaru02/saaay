@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Member } from 'src/entity/member.entity';
+import { User } from 'src/entity/user.entity';
 import { MemberRepository } from 'src/repositories/member.repository';
 
 @Injectable()
 export class MemberService {
   constructor(
-    @InjectRepository(Member)
+    @InjectRepository(User)
     private readonly memberRepository: MemberRepository,
   ) {}
 
-  public async findMember(memberId: string): Promise<Member> {
+  public async findMember(memberId: string): Promise<User> {
     // let memberDto;
     // await this.memberRepository.findOne(memberId).then((m) => {
     //   return m;
