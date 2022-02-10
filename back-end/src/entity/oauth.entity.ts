@@ -25,7 +25,7 @@ export class Oauth {
   @Column()
   provider: string;
 
-  // 일대일 단방향 매핑 (member <-> oauth), oauth 쪽에만 데이터
+  // 일대일 단방향 매핑 (user <-> oauth), oauth 쪽에만 데이터
   @OneToOne(() => User)
   @JoinColumn()
   user: User;

@@ -8,8 +8,8 @@ import { RoomService } from './services/room.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestUser } from './entity/sampleuser.entity';
 import { TestTodo } from './entity/sampletodo.entity';
-import { MemberController } from './controllers/member.controller';
-import { MemberService } from './services/member.service';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
 import { User } from './entity/user.entity';
 import { Oauth } from './entity/oauth.entity';
 import { Role } from './entity/role.entity';
@@ -29,14 +29,14 @@ import { AccountService } from './services/account.service';
     SampleController,
     RoomController,
     AccountController,
-    MemberController,
+    UserController,
   ],
   providers: [
     AppService,
     SampleService,
     RoomService,
     AccountService,
-    MemberService,
+    UserService,
   ],
 })
 export class AppModule {}
