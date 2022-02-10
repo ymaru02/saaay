@@ -15,11 +15,21 @@ import { Oauth } from './entity/oauth.entity';
 import { Role } from './entity/role.entity';
 import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
+<<<<<<< HEAD
+import { ScheduleService } from './services/schedule.service';
+import { ScheduleController } from './controllers/schedule.controller';
+=======
+import { UserCustomRepository as UserCustomRepository } from './repositories/user.custom.repository';
+import { TestPhoto } from './entity/samplephoto.entity';
+import { TestPhotoMetadata } from './entity/samplephotometadata.entity';
+>>>>>>> 67bfd95f43b41ff4d494836d3f0ff7351a1483cc
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([TestUser]),
     TypeOrmModule.forFeature([TestTodo]),
+    TypeOrmModule.forFeature([TestPhoto]),
+    TypeOrmModule.forFeature([TestPhotoMetadata]),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Oauth]),
     TypeOrmModule.forFeature([Role]),
@@ -30,6 +40,7 @@ import { AccountService } from './services/account.service';
     RoomController,
     AccountController,
     UserController,
+    ScheduleController
   ],
   providers: [
     AppService,
@@ -37,6 +48,11 @@ import { AccountService } from './services/account.service';
     RoomService,
     AccountService,
     UserService,
+<<<<<<< HEAD
+    ScheduleService
+=======
+    UserCustomRepository,
+>>>>>>> 67bfd95f43b41ff4d494836d3f0ff7351a1483cc
   ],
 })
 export class AppModule {}
