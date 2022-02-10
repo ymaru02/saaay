@@ -1,9 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-<<<<<<<< HEAD:back-end/src/entity/sampletodo.entity.ts
 import { TestUser } from './sampleuser.entity';
-========
-import { TestUser } from './sample-user.entity';
->>>>>>>> 013e0541fbd1bda2ebd56da6ff4ab8407fbd3c58:back-end/src/entity/sample-todo.entity.ts
 
 // Class 이름 = 테이블 이름
 @Entity()
