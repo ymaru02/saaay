@@ -4,8 +4,7 @@ import {
   Delete,
   Get,
   HttpStatus,
-  Param,
-  Patch,
+  Put,
   Post,
   Res,
 } from '@nestjs/common';
@@ -14,20 +13,23 @@ import { ScheduleService } from '../services/schedule.service';
 
 @Controller('/schedule')
 export class ScheduleController {
+  res: any;
   constructor(private readonly scheduleService: ScheduleService) {}
 
-
-  @Get(':userId/')
+  @Get('/list')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async getScheduleList(
-    @Param('userId') email: string,
+    @Body()
+    params: {
+      email: string,
+    },
     @Res() res: Response,
   ) {
-    const scheduleList = await this.scheduleService.getScheduleList(email);
+    const scheduleList = await this.scheduleService.getScheduleList(params.email);
     res.status(HttpStatus.OK).json(scheduleList);
   }
 
-  @Post(':userId/create')
+  @Post('create')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async createSchedule(
     @Body()
@@ -38,10 +40,10 @@ export class ScheduleController {
     @Res() res: Response,
   ) {
     const schedule = await this.scheduleService.createSchedule(params.email, params.date);
-    res.status(HttpStatus.OK).json(schedule);
+    res.status(HttpStatus.CREATED).json(schedule);
   }
 
-  @Patch(':userId/update')
+  @Put('update')
   // 일정 변경
   async updateSchedule(
     @Body()
@@ -56,7 +58,7 @@ export class ScheduleController {
     res.status(HttpStatus.OK).json(schedule);
   }
 
-  @Delete(':userId/delete')
+  @Delete('delete')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async deleteSchedule(
     @Body()

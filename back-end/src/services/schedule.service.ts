@@ -9,12 +9,12 @@ export class ScheduleService {
   }
 
   public async createSchedule(email: string, date: string) {
-    const result = await this.createSchedule(email, date);
+    const result = await createSchedule(email, date);
     return result;
   }
 
   public async updateSchedule(email: string, date: string, update_date: string) {
-    const result = await this.updateSchedule(email, date, update_date);
+    const result = await updateSchedule(email, date, update_date);
     return result;
   }
 

@@ -16,6 +16,7 @@ import { Role } from './entity/role.entity';
 import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
 import { ScheduleService } from './services/schedule.service';
+import { ScheduleController } from './controllers/schedule.controller';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
@@ -31,6 +32,7 @@ import { ScheduleService } from './services/schedule.service';
     RoomController,
     AccountController,
     UserController,
+    ScheduleController
   ],
   providers: [
     AppService,
@@ -38,6 +40,7 @@ import { ScheduleService } from './services/schedule.service';
     RoomService,
     AccountService,
     UserService,
+    ScheduleService
   ],
 })
 export class AppModule {}

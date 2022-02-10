@@ -2,40 +2,40 @@ import { driver } from './connection-pools/neo4j.db';
 
 // user가 생성한 앞으로의 일정 가져오기(get)
 export async function getScheduleList(email: string) {
-  let result;
   const session = driver().session();
+  let result;
+  const dateList = []
 
   try {
     result = await session.run(
-      `MATCH (a:User)-[rel:CREATE_IN]->(b:Schedule) WHERE a.email = ${email} RETURN b`,
-    );
-    const shceduleList = [];
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule) RETURN b`,
+    )
 
-    for (const record of result.records) {
-      shceduleList.push(record._fields[0]);
-      console.log(record)
+    for (const rec of result.records) {
+      dateList.push(rec._fields[0].properties.date);
     }
+  
   } finally {
     await session.close();
   }
 
   // on application exit:
   await driver().close();
-
-  return result.records;
+  // console.log(result)
+  return dateList
 }
 
 // 일정 생성하기(post)
 export async function createSchedule(email: string, date: string) {
   const session = driver().session()
-  let make_rel;
+
   try {
     const create = await session.run(
-      `CREATE (n:Schedule{date:${date}}) RETURN n`,
+      `CREATE (n:Schedule{date:"${date}"}) RETURN n`,
     )
 
-    make_rel = await session.run(
-      `MATCH (a:User), (b:Schedule) WHERE a.email = ${email}  AND b.date = ${date} CREATE (a)-[r:CREATE_IN]->(b) RETURN a, r, b`,
+    const make_rel = await session.run(
+      `MATCH (a:User{email:"${email}"}), (b:Schedule{date:"${date}"}) CREATE (a)-[r:CREATE_IN]->(b) RETURN a, r, b`,
     )
   
   } finally {
@@ -44,8 +44,10 @@ export async function createSchedule(email: string, date: string) {
   
   // on application exit:
   await driver().close()
+  
+  const result = { message: 'Create Schedule', email: `${email}`, date: `${date}` }
 
-  return make_rel.records
+  return result;
 }
 
 // 일정 수정하기(patch)
@@ -54,7 +56,7 @@ export async function updateSchedule(email: string, date: string, update_date: s
   let update;
   try {
     update = await session.run(
-      `MATCH (a:User{email:${email}})-[r:CREATE_IN]->(b:Schedule{date:${date}}) SET b.date = ${update_date} RETURN b`
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule{date:"${date}"}) SET b.date = "${update_date}" RETURN b`
     )
   
   } finally {
@@ -63,18 +65,17 @@ export async function updateSchedule(email: string, date: string, update_date: s
   
   // on application exit:
   await driver().close()
-
-  return update.records[0].get[0]
+  const result = { message: 'Update Schedule', date: update.records[0]._fields[0].properties.date}
+  return result;
 }
 
 // 일정 삭제하기(delete)
 export async function deleteSchedule(email: string, date: string) {
   const session = driver().session();
-  let result;
 
   try {
-    result = await session.run(
-      `MATCH (a:User{email:${email}})-[r:CREATE_IN]->(b:Schedule{date:${date}}) DETACH DELETE b`,
+    const del = await session.run(
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule{date:"${date}"}) DETACH DELETE b`,
     );
   } finally {
     await session.close();
@@ -83,5 +84,6 @@ export async function deleteSchedule(email: string, date: string) {
   // on application exit:
   await driver().close();
 
-  return result.records[0].get[0];
+  const result = { message: 'Delete Schedule', email: `${email}`}
+  return result
 }
