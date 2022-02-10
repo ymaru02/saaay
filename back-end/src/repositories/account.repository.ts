@@ -77,3 +77,25 @@ export async function deleteFollow(targetId: string, myId: string) {
   await driver().close();
   return true;
 }
+
+export async function addBlock(targetId: string, myId: string) {
+  let result;
+  const session = driver().session();
+
+  try {
+    result = await session.run(
+      `MATCH (me) - [rel:BLOCK] -> (target) WHERE id(me) = ${myId} AND id(target) = ${targetId} RETURN rel`,
+    );
+    if (result.records[0]) {
+      return false;
+    }
+    await session.run(
+      `MATCH (me), (target) WHERE id(me) = ${myId} AND id(target) = ${targetId} CREATE (me) - [:BLOCK] -> (target)`,
+    );
+  } finally {
+    await session.close();
+  }
+
+  await driver().close();
+  return true;
+}

@@ -65,4 +65,19 @@ export class AccountController {
       res.status(400).send();
     }
   }
+
+  @Post(':targetId/block')
+  async addMyBlockList(
+    @Param('targetId') targetId: string,
+    @Res() res: Response,
+  ) {
+    // 로그인 기능 연결 후 로그인한 유저 Id 로 변경
+    const myId = '4';
+    const result = await this.accountService.addMyBlockList(targetId, myId);
+    if (result) {
+      res.status(201).send();
+    } else {
+      res.status(400).send();
+    }
+  }
 }
