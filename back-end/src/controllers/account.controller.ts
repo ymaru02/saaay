@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -44,7 +45,7 @@ export class AccountController {
     if (result) {
       res.status(201).send();
     } else {
-      res.status(400).send();
+      throw new BadRequestException('이미 팔로잉 리스트에 있는 유저입니다.');
     }
   }
 
@@ -62,7 +63,7 @@ export class AccountController {
     if (result) {
       res.status(204).send();
     } else {
-      res.status(400).send();
+      throw new BadRequestException('팔로잉 리스트에 없는 유저입니다.');
     }
   }
 
@@ -77,7 +78,7 @@ export class AccountController {
     if (result) {
       res.status(201).send();
     } else {
-      res.status(400).send();
+      throw new BadRequestException('이미 블락 리스트에 있는 유저입니다.');
     }
   }
 
@@ -92,7 +93,7 @@ export class AccountController {
     if (result) {
       res.status(204).send();
     } else {
-      res.status(400).send();
+      throw new BadRequestException('블락 리스트에 없는 유저입니다.');
     }
   }
 }
