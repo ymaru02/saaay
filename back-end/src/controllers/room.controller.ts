@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { Response } from 'express';
+import { Room } from 'src/models/RoomModel';
 
 import { RoomService } from '../services/room.service';
 
@@ -21,21 +22,15 @@ export class RoomController {
   @Post()
   createRoom(
     @Body()
-    params: {
-      roomName: string;
-      category: string[];
-      moderator: string[];
-      notice: string;
-      participates: string[];
-    },
+    RoomDTO: Room,
     @Res() res: Response,
   ) {
     const room = this.roomService.createRoom(
-      params.roomName,
-      params.category,
-      params.moderator,
-      params.notice,
-      params.participates,
+      RoomDTO.roomName,
+      RoomDTO.category,
+      RoomDTO.moderator,
+      RoomDTO.notice,
+      RoomDTO.participates,
     );
     res.status(HttpStatus.CREATED).json({ message: 'RoomCreated', room: room });
   }
@@ -46,7 +41,7 @@ export class RoomController {
     res.status(HttpStatus.OK);
     const Rooms = this.roomService.getRooms();
     console.log('rooms : ', Rooms);
-    res.status(HttpStatus.OK).json(JSON.stringify(Rooms));
+    res.status(HttpStatus.OK).json(Rooms);
   }
 
   @Get('/:Id')
@@ -54,7 +49,7 @@ export class RoomController {
     console.log('/getRoom');
     res.status(HttpStatus.OK);
     const Room = this.roomService.getRoom(Id);
-    res.status(HttpStatus.OK).json(JSON.stringify(Room));
+    res.status(HttpStatus.OK).json(Room);
   }
 
   @Patch(':Id')
