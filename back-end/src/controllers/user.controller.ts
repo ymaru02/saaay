@@ -35,20 +35,18 @@ export class UserController {
   // }
 
   @Get('/:userName')
-  async getUserByName(
+  async searchUsername(
     @Param('userName') userName: string,
     @Res() res: Response,
   ) {
-    console.log('find user :', userName);
-    this.userService
-      .findUserByUsername(userName)
-      .then((userDto) => {
-        res.status(HttpStatus.OK).json(userDto).send();
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(HttpStatus.BAD_GATEWAY).send();
-      });
+    console.log('search user :', userName);
+    try {
+      const userDtos = await this.userService.findUserByUsername(userName);
+      res.status(HttpStatus.OK).json(userDtos);
+    } catch (err) {
+      console.log(err);
+      res.status(HttpStatus.BAD_GATEWAY).send();
+    }
   }
 
   @Post('/signup')
@@ -68,10 +66,11 @@ export class UserController {
     console.log('login user :', userDto);
     try {
       const user = await this.userService.signinUser(userDto);
+      // TODO : Login Token
       res.status(HttpStatus.OK).json(user).send();
     } catch (err) {
-      console.log(err);
-      res.status(HttpStatus.BAD_GATEWAY).send();
+      console.log(err.toString());
+      res.status(HttpStatus.BAD_GATEWAY).json(err).send();
     }
   }
 }

@@ -13,22 +13,22 @@ export class UserService {
   public async signinUser(userDto: UserDto): Promise<UserDto> {
     const foundUser = await this.userRepository.findByEmail(userDto.email);
 
-    const password = foundUser.password;
-    const hash = await bcrypt.hash(password, this.saltRounds);
+    const storedPassword = foundUser.password;
 
-    const isMatch = await bcrypt.compare(password, hash);
+    const isMatch = await bcrypt.compare(userDto.password, storedPassword);
+    if (!isMatch) {
+      throw new Error('틀린 비밀번호');
+    }
+
     foundUser.password = undefined;
     return foundUser;
   }
   private readonly userRepository: UserRepository = new UserRepository();
 
-  public async findUserByUsername(userName: string): Promise<Result> {
-    try {
-      const userDto = await this.userRepository.findByUsername(userName);
-      return userDto;
-    } catch (err) {
-      throw err;
-    }
+  public async findUserByUsername(userName: string): Promise<UserDto[]> {
+    const userDtos = await this.userRepository.findByUsername(userName);
+    userDtos.forEach((u) => (u.password = undefined));
+    return userDtos;
   }
 
   public async createUser(userDto: UserDto): Promise<UserDto> {

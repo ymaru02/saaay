@@ -7,13 +7,15 @@ export class UserRepository {
     const result = await executeQuery<Record>(
       `MATCH (user) WHERE user.email = '${email}' RETURN user`,
     );
+    if (result.length == 0) throw new Error('이메일 없음');
     return result[0].get('user').properties;
   }
 
-  async findByUsername(userName: string): Promise<Result> {
-    return await executeQuery(
-      `MATCH (user) WHERE user.username = '${userName}' RETURN user`,
+  async findByUsername(userName: string): Promise<UserDto[]> {
+    const result = await executeQuery<Record>(
+      `MATCH (user) WHERE user.username =~ '${userName}.*' RETURN user`,
     );
+    return result.map((r) => r.get('user').properties);
   }
 
   async createUser(userDto: UserDto): Promise<UserDto> {
