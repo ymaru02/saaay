@@ -35,7 +35,10 @@ export class UserController {
   // }
 
   @Get('/:userName')
-  getUserByName(@Param('userName') userName: string, @Res() res: Response) {
+  async getUserByName(
+    @Param('userName') userName: string,
+    @Res() res: Response,
+  ) {
     console.log('find user :', userName);
     this.userService
       .findUserByUsername(userName)
@@ -48,11 +51,27 @@ export class UserController {
       });
   }
 
-  @Post()
-  async signin(@Body() userDto: UserDto, @Res() res: Response) {
+  @Post('/signup')
+  async signup(@Body() userDto: UserDto, @Res() res: Response) {
     console.log('create user :', userDto);
-    const newUser = await this.userService.createUser(userDto);
-    newUser.password = undefined;
-    res.status(HttpStatus.CREATED).json(newUser).send();
+    try {
+      const newUser = await this.userService.createUser(userDto);
+      res.status(HttpStatus.CREATED).json(newUser).send();
+    } catch (err) {
+      console.log(err);
+      res.status(HttpStatus.BAD_GATEWAY).send();
+    }
+  }
+
+  @Post('/login')
+  async signin(@Body() userDto: UserDto, @Res() res: Response) {
+    console.log('login user :', userDto);
+    try {
+      const user = await this.userService.signinUser(userDto);
+      res.status(HttpStatus.OK).json(user).send();
+    } catch (err) {
+      console.log(err);
+      res.status(HttpStatus.BAD_GATEWAY).send();
+    }
   }
 }
