@@ -1,11 +1,6 @@
 import { Record, Result } from 'neo4j-driver';
 import { UserDto } from 'src/models/user.dto';
-import {
-  driver,
-  executeQuery,
-  session,
-  stringify,
-} from './connection-pools/neo4j.db';
+import { executeQuery, stringify } from './connection-pools/neo4j.db';
 
 export class UserRepository {
   async findByEmail(email: string): Promise<UserDto> {
