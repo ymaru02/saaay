@@ -24,3 +24,18 @@ export function stringify(obj: object): string {
   console.log(str);
   return str;
 }
+
+export async function executeQuery<T>(query: string): Promise<T> {
+  let result;
+  const session = driver().session();
+
+  try {
+    result = await session.run(query);
+  } finally {
+    await session.close();
+  }
+
+  await driver().close();
+
+  return result.records;
+}
