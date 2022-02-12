@@ -65,10 +65,16 @@ const mutation: MutationTree<AccountStateInterface> = {
     }
   },
 
+  addMyBlockList(state: AccountStateInterface, target: block) {
+    // state.blockList.push(target);
+
+    state.blockListId.push(target._fields[0].identity.low);
+  },
+
   deleteMyBlockList(state: AccountStateInterface, targetId: string) {
-    state.blockList = state.blockList.filter(function (block) {
-      return block._fields[0].identity.low !== targetId;
-    });
+    // state.blockList = state.blockList.filter(function (block) {
+    //   return block._fields[0].identity.low !== targetId;
+    // });
 
     state.blockListId = state.blockListId.filter(function (id) {
       return id !== targetId;

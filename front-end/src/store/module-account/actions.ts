@@ -3,6 +3,15 @@ import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
 import axios from 'axios';
 
+interface block {
+  keys: string[];
+  _fields: [
+    {
+      identity: { low: string; high: string };
+    }
+  ];
+}
+
 const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async getFollowerList({ commit }, targetId: string) {
     const result = await axios.get(
@@ -33,6 +42,13 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
       `http://localhost:3000/accounts/${targetId}/blocklist`
     );
     commit('getBlockList', result.data);
+  },
+
+  async addMyBlockList({ commit }, target: block) {
+    await axios.post(
+      `http://localhost:3000/accounts/${target._fields[0].identity.low}/block`
+    );
+    commit('addMyBlockList', target);
   },
 
   async deleteMyBlockList({ commit }, targetId: string) {

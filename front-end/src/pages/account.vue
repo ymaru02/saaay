@@ -160,7 +160,14 @@
                       color="red"
                       label="BLOCKED"
                     />
-                    <q-btn v-else outline rounded color="red" label="BLOCK" />
+                    <q-btn
+                      v-else
+                      @click="addMyBlockList(block)"
+                      outline
+                      rounded
+                      color="red"
+                      label="BLOCK"
+                    />
                   </div>
                 </div>
               </div>
@@ -193,6 +200,9 @@ export default {
     const deleteMyFollowingList = (targetId: string) =>
       $store.dispatch('account/deleteMyFollowingList', targetId);
 
+    const addMyBlockList = (target) =>
+      $store.dispatch('account/addMyBlockList', target);
+
     const deleteMyBlockList = (targetId: string) =>
       $store.dispatch('account/deleteMyBlockList', targetId);
 
@@ -209,6 +219,7 @@ export default {
       blockListId,
       addMyFollowingList,
       deleteMyFollowingList,
+      addMyBlockList,
       deleteMyBlockList,
     };
   },
