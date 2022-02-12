@@ -33,6 +33,20 @@ const mutation: MutationTree<AccountStateInterface> = {
       }
     }
   },
+
+  deleteMyFollowingList(state: AccountStateInterface, targetId: string) {
+    for (const follower of state.followers) {
+      if (follower._fields[0].identity.low === targetId) {
+        follower._fields[0].properties.isFollowing = false;
+      }
+    }
+
+    for (const following of state.followings) {
+      if (following._fields[0].identity.low === targetId) {
+        following._fields[0].properties.isFollowing = false;
+      }
+    }
+  },
 };
 
 export default mutation;

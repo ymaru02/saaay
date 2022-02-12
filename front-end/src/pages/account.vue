@@ -48,6 +48,9 @@
                   <div class="col-2 flex flex-center">
                     <q-btn
                       v-if="follower._fields[0].properties.isFollowing"
+                      @click="
+                        deleteMyFollowingList(follower._fields[0].identity.low)
+                      "
                       outline
                       rounded
                       color="primary"
@@ -102,6 +105,9 @@
                   <div class="col-2 flex flex-center">
                     <q-btn
                       v-if="following._fields[0].properties.isFollowing"
+                      @click="
+                        deleteMyFollowingList(following._fields[0].identity.low)
+                      "
                       outline
                       rounded
                       color="primary"
@@ -142,6 +148,8 @@ export default {
     $store.dispatch('account/getFollowingList', targetId).catch(console.log);
     const addMyFollowingList = (targetId: string) =>
       $store.dispatch('account/addMyFollowingList', targetId);
+    const deleteMyFollowingList = (targetId: string) =>
+      $store.dispatch('account/deleteMyFollowingList', targetId);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
 
@@ -150,6 +158,7 @@ export default {
       followers,
       followings,
       addMyFollowingList,
+      deleteMyFollowingList,
     };
   },
 };

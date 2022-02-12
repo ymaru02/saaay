@@ -22,6 +22,11 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     await axios.post(`http://localhost:3000/accounts/${targetId}/follow`);
     commit('addMyFollowingList', targetId);
   },
+
+  async deleteMyFollowingList({ commit }, targetId: string) {
+    await axios.delete(`http://localhost:3000/accounts/${targetId}/follow`);
+    commit('deleteMyFollowingList', targetId);
+  },
 };
 
 export default actions;
