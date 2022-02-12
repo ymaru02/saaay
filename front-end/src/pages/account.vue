@@ -152,8 +152,14 @@
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
-                    <q-btn outline rounded color="red" label="BLOCK" />
-                    <q-btn unelevated rounded color="red" label="BLOCKED" />
+                    <q-btn
+                      v-if="blockListId.includes(block._fields[0].identity.low)"
+                      unelevated
+                      rounded
+                      color="red"
+                      label="BLOCKED"
+                    />
+                    <q-btn v-else outline rounded color="red" label="BLOCK" />
                   </div>
                 </div>
               </div>
@@ -175,22 +181,28 @@ export default {
     const route = useRoute();
     const $store = useStore();
     const targetId = route.params.targetId;
+
     $store.dispatch('account/getFollowerList', targetId).catch(console.log);
     $store.dispatch('account/getFollowingList', targetId).catch(console.log);
     $store.dispatch('account/getBlockList', targetId).catch(console.log);
+
     const addMyFollowingList = (targetId: string) =>
       $store.dispatch('account/addMyFollowingList', targetId);
+
     const deleteMyFollowingList = (targetId: string) =>
       $store.dispatch('account/deleteMyFollowingList', targetId);
+
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
+    const blockListId = computed(() => $store.state.account.blockListId);
 
     return {
       tab: ref('followers'),
       followers,
       followings,
       blockList,
+      blockListId,
       addMyFollowingList,
       deleteMyFollowingList,
     };

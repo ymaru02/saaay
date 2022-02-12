@@ -8,11 +8,21 @@ interface follow {
   ];
 }
 
+interface block {
+  keys: string[];
+  _fields: [
+    {
+      identity: { low: string; high: string };
+    }
+  ];
+}
+
 export interface AccountStateInterface {
   prop: boolean;
   followers: follow[];
   followings: follow[];
-  blockList: string[];
+  blockList: block[];
+  blockListId: string[];
 }
 
 function state(): AccountStateInterface {
@@ -21,6 +31,7 @@ function state(): AccountStateInterface {
     followers: [],
     followings: [],
     blockList: [],
+    blockListId: [],
   };
 }
 

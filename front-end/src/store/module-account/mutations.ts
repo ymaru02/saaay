@@ -11,6 +11,15 @@ interface follow {
   ];
 }
 
+interface block {
+  keys: string[];
+  _fields: [
+    {
+      identity: { low: string; high: string };
+    }
+  ];
+}
+
 const mutation: MutationTree<AccountStateInterface> = {
   getFollowerList(state: AccountStateInterface, data: follow[]) {
     state.followers = data;
@@ -48,8 +57,12 @@ const mutation: MutationTree<AccountStateInterface> = {
     }
   },
 
-  getBlockList(state: AccountStateInterface, data: string[]) {
+  getBlockList(state: AccountStateInterface, data: block[]) {
     state.blockList = data;
+
+    for (const block of state.blockList) {
+      state.blockListId.push(block._fields[0].identity.low);
+    }
   },
 };
 
