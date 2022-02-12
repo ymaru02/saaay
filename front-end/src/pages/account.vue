@@ -30,7 +30,7 @@
                       <img
                         src="images/blank-profile-picture.png"
                         alt="profile-image"
-                        class="profile"
+                        class="profile q-mb-sm"
                       />
                     </div>
                   </div>
@@ -46,7 +46,20 @@
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
-                    <q-btn unelevated rounded color="primary" label="FOLLOW" />
+                    <q-btn
+                      v-if="follower._fields[0].properties.isFollowing"
+                      outline
+                      rounded
+                      color="primary"
+                      label="FOLLOWING"
+                    />
+                    <q-btn
+                      v-else
+                      unelevated
+                      rounded
+                      color="primary"
+                      label="FOLLOW"
+                    />
                   </div>
                 </div>
               </div>
@@ -63,7 +76,7 @@
                       <img
                         src="images/blank-profile-picture.png"
                         alt="profile-image"
-                        class="profile"
+                        class="profile q-mb-sm"
                       />
                     </div>
                   </div>
@@ -72,13 +85,32 @@
                       <div class="text-h5">
                         {{ following._fields[0].properties.username }}
                       </div>
+                      <div
+                        class="q-ml-lg"
+                        v-if="following._fields[0].properties.isFollower"
+                      >
+                        Follows You
+                      </div>
                     </div>
                     <p>
                       {{ following._fields[0].properties.biography }}
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
-                    <q-btn outline rounded color="primary" label="FOLLOWING" />
+                    <q-btn
+                      v-if="following._fields[0].properties.isFollowing"
+                      outline
+                      rounded
+                      color="primary"
+                      label="FOLLOWING"
+                    />
+                    <q-btn
+                      v-else
+                      unelevated
+                      rounded
+                      color="primary"
+                      label="FOLLOW"
+                    />
                   </div>
                 </div>
               </div>
