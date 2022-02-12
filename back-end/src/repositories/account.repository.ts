@@ -2,9 +2,17 @@ import { driver } from './connection-pools/neo4j.db';
 
 export async function getFollowerList(targetId: string) {
   let result;
+  const followingId = [];
+  let followings;
   const session = driver().session();
 
   try {
+    followings = await session.run(
+      `MATCH (me) - [:FOLLOW] -> (target) WHERE id(me) = ${targetId} RETURN target`,
+    );
+    for (const following of followings.records) {
+      followingId.push(following._fields[0].identity.low);
+    }
     result = await session.run(
       `MATCH (me) <- [:FOLLOW] - (target) WHERE id(me) = ${targetId} RETURN target`,
     );
@@ -13,6 +21,11 @@ export async function getFollowerList(targetId: string) {
   }
   for (const record of result.records) {
     record._fields[0].properties.isFollower = true;
+    if (followingId.includes(record._fields[0].identity.low)) {
+      record._fields[0].properties.isFollowing = true;
+    } else {
+      record._fields[0].properties.isFollowing = false;
+    }
   }
 
   await driver().close();
@@ -40,6 +53,7 @@ export async function getFollowingList(targetId: string) {
     await session.close();
   }
   for (const record of result.records) {
+    record._fields[0].properties.isFollowing = true;
     if (followerId.includes(record._fields[0].identity.low)) {
       record._fields[0].properties.isFollower = true;
     } else {
