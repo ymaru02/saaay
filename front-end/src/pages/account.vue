@@ -55,6 +55,9 @@
                     />
                     <q-btn
                       v-else
+                      @click="
+                        addMyFollowingList(follower._fields[0].identity.low)
+                      "
                       unelevated
                       rounded
                       color="primary"
@@ -106,6 +109,9 @@
                     />
                     <q-btn
                       v-else
+                      @click="
+                        addMyFollowingList(following._fields[0].identity.low)
+                      "
                       unelevated
                       rounded
                       color="primary"
@@ -134,6 +140,8 @@ export default {
     const targetId = route.params.targetId;
     $store.dispatch('account/getFollowerList', targetId).catch(console.log);
     $store.dispatch('account/getFollowingList', targetId).catch(console.log);
+    const addMyFollowingList = (targetId: string) =>
+      $store.dispatch('account/addMyFollowingList', targetId);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
 
@@ -141,6 +149,7 @@ export default {
       tab: ref('followers'),
       followers,
       followings,
+      addMyFollowingList,
     };
   },
 };

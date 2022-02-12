@@ -17,6 +17,11 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     );
     commit('getFollowingList', result.data);
   },
+
+  async addMyFollowingList({ commit }, targetId: string) {
+    await axios.post(`http://localhost:3000/accounts/${targetId}/follow`);
+    commit('addMyFollowingList', targetId);
+  },
 };
 
 export default actions;

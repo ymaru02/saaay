@@ -1,7 +1,17 @@
+interface follow {
+  keys: string[];
+  _fields: [
+    {
+      identity: { low: string; high: string };
+      properties: { isFollower: boolean; isFollowing: boolean };
+    }
+  ];
+}
+
 export interface AccountStateInterface {
   prop: boolean;
-  followers: string[];
-  followings: string[];
+  followers: follow[];
+  followings: follow[];
 }
 
 function state(): AccountStateInterface {
