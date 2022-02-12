@@ -64,6 +64,16 @@ const mutation: MutationTree<AccountStateInterface> = {
       state.blockListId.push(block._fields[0].identity.low);
     }
   },
+
+  deleteMyBlockList(state: AccountStateInterface, targetId: string) {
+    state.blockList = state.blockList.filter(function (block) {
+      return block._fields[0].identity.low !== targetId;
+    });
+
+    state.blockListId = state.blockListId.filter(function (id) {
+      return id !== targetId;
+    });
+  },
 };
 
 export default mutation;

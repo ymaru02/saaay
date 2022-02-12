@@ -154,6 +154,7 @@
                   <div class="col-2 flex flex-center">
                     <q-btn
                       v-if="blockListId.includes(block._fields[0].identity.low)"
+                      @click="deleteMyBlockList(block._fields[0].identity.low)"
                       unelevated
                       rounded
                       color="red"
@@ -192,6 +193,9 @@ export default {
     const deleteMyFollowingList = (targetId: string) =>
       $store.dispatch('account/deleteMyFollowingList', targetId);
 
+    const deleteMyBlockList = (targetId: string) =>
+      $store.dispatch('account/deleteMyBlockList', targetId);
+
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
@@ -205,6 +209,7 @@ export default {
       blockListId,
       addMyFollowingList,
       deleteMyFollowingList,
+      deleteMyBlockList,
     };
   },
 };

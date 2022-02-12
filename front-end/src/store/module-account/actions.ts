@@ -34,6 +34,11 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     );
     commit('getBlockList', result.data);
   },
+
+  async deleteMyBlockList({ commit }, targetId: string) {
+    await axios.delete(`http://localhost:3000/accounts/${targetId}/block`);
+    commit('deleteMyBlockList', targetId);
+  },
 };
 
 export default actions;
