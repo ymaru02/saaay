@@ -14,6 +14,7 @@
           >
             <q-tab name="followers" label="Followers" />
             <q-tab name="following" label="Following" />
+            <q-tab name="blocklist" label="BlockList" />
           </q-tabs>
 
           <q-separator />
@@ -127,6 +128,36 @@
                 </div>
               </div>
             </q-tab-panel>
+
+            <q-tab-panel name="blocklist">
+              <div v-for="(block, index) in blockList" :key="`block-${index}`">
+                <div class="row">
+                  <div class="col-1 row">
+                    <div class="col-8 offset-2">
+                      <img
+                        src="images/blank-profile-picture.png"
+                        alt="profile-image"
+                        class="profile q-mb-sm"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-9 q-pl-lg row">
+                    <div class="col-12 row flex items-end">
+                      <div class="text-h5">
+                        {{ block._fields[0].properties.username }}
+                      </div>
+                    </div>
+                    <p>
+                      {{ block._fields[0].properties.biography }}
+                    </p>
+                  </div>
+                  <div class="col-2 flex flex-center">
+                    <q-btn outline rounded color="red" label="BLOCK" />
+                    <q-btn unelevated rounded color="red" label="BLOCKED" />
+                  </div>
+                </div>
+              </div>
+            </q-tab-panel>
           </q-tab-panels>
         </q-card>
       </div>
@@ -146,17 +177,20 @@ export default {
     const targetId = route.params.targetId;
     $store.dispatch('account/getFollowerList', targetId).catch(console.log);
     $store.dispatch('account/getFollowingList', targetId).catch(console.log);
+    $store.dispatch('account/getBlockList', targetId).catch(console.log);
     const addMyFollowingList = (targetId: string) =>
       $store.dispatch('account/addMyFollowingList', targetId);
     const deleteMyFollowingList = (targetId: string) =>
       $store.dispatch('account/deleteMyFollowingList', targetId);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
+    const blockList = computed(() => $store.state.account.blockList);
 
     return {
       tab: ref('followers'),
       followers,
       followings,
+      blockList,
       addMyFollowingList,
       deleteMyFollowingList,
     };

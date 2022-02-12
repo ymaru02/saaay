@@ -47,6 +47,10 @@ const mutation: MutationTree<AccountStateInterface> = {
       }
     }
   },
+
+  getBlockList(state: AccountStateInterface, data: string[]) {
+    state.blockList = data;
+  },
 };
 
 export default mutation;

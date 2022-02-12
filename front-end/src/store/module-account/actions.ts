@@ -27,6 +27,13 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     await axios.delete(`http://localhost:3000/accounts/${targetId}/follow`);
     commit('deleteMyFollowingList', targetId);
   },
+
+  async getBlockList({ commit }, targetId: string) {
+    const result = await axios.get(
+      `http://localhost:3000/accounts/${targetId}/blocklist`
+    );
+    commit('getBlockList', result.data);
+  },
 };
 
 export default actions;

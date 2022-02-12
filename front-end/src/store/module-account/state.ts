@@ -12,6 +12,7 @@ export interface AccountStateInterface {
   prop: boolean;
   followers: follow[];
   followings: follow[];
+  blockList: string[];
 }
 
 function state(): AccountStateInterface {
@@ -19,6 +20,7 @@ function state(): AccountStateInterface {
     prop: false,
     followers: [],
     followings: [],
+    blockList: [],
   };
 }
 
