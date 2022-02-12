@@ -11,6 +11,9 @@ export async function getFollowerList(targetId: string) {
   } finally {
     await session.close();
   }
+  for (const record of result.records) {
+    record._fields[0].properties.isFollower = true;
+  }
 
   await driver().close();
 
@@ -19,14 +22,29 @@ export async function getFollowerList(targetId: string) {
 
 export async function getFollowingList(targetId: string) {
   let result;
+  const followerId = [];
+  let followers;
   const session = driver().session();
 
   try {
+    followers = await session.run(
+      `MATCH (me) <- [:FOLLOW] - (target) WHERE id(me) = ${targetId} RETURN target`,
+    );
+    for (const follower of followers.records) {
+      followerId.push(follower._fields[0].identity.low);
+    }
     result = await session.run(
       `MATCH (me) - [:FOLLOW] -> (target) WHERE id(me) = ${targetId} RETURN target`,
     );
   } finally {
     await session.close();
+  }
+  for (const record of result.records) {
+    if (followerId.includes(record._fields[0].identity.low)) {
+      record._fields[0].properties.isFollower = true;
+    } else {
+      record._fields[0].properties.isFollower = false;
+    }
   }
 
   await driver().close();
