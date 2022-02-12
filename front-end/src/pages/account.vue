@@ -37,12 +37,12 @@
                   <div class="col-9 q-pl-lg row">
                     <div class="col-12 row flex items-end">
                       <div class="text-h5">
-                        {{ follower._fields[0].properties.email }}
+                        {{ follower._fields[0].properties.username }}
                       </div>
                       <div class="q-ml-lg">Follows You</div>
                     </div>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      {{ follower._fields[0].properties.biography }}
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
@@ -53,33 +53,35 @@
             </q-tab-panel>
 
             <q-tab-panel name="following">
-              <!-- <div
+              <div
                 v-for="(following, index) in followings"
                 :key="`following-${index}`"
-              > -->
-              <div class="row">
-                <div class="col-1 row">
-                  <div class="col-8 offset-2">
-                    <img
-                      src="images/blank-profile-picture.png"
-                      alt="profile-image"
-                      class="profile"
-                    />
+              >
+                <div class="row">
+                  <div class="col-1 row">
+                    <div class="col-8 offset-2">
+                      <img
+                        src="images/blank-profile-picture.png"
+                        alt="profile-image"
+                        class="profile"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div class="col-9 q-pl-lg row">
-                  <div class="col-12 row flex items-end">
-                    <div class="text-h5">Name</div>
+                  <div class="col-9 q-pl-lg row">
+                    <div class="col-12 row flex items-end">
+                      <div class="text-h5">
+                        {{ following._fields[0].properties.username }}
+                      </div>
+                    </div>
+                    <p>
+                      {{ following._fields[0].properties.biography }}
+                    </p>
                   </div>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </p>
-                </div>
-                <div class="col-2 flex flex-center">
-                  <q-btn outline rounded color="primary" label="FOLLOWING" />
+                  <div class="col-2 flex flex-center">
+                    <q-btn outline rounded color="primary" label="FOLLOWING" />
+                  </div>
                 </div>
               </div>
-              <!-- </div> -->
             </q-tab-panel>
           </q-tab-panels>
         </q-card>
@@ -92,7 +94,6 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
-// import axios from 'axios';
 
 export default {
   setup() {
@@ -100,29 +101,16 @@ export default {
     const $store = useStore();
     const targetId = route.params.targetId;
     $store.dispatch('account/getFollowerList', targetId).catch(console.log);
+    $store.dispatch('account/getFollowingList', targetId).catch(console.log);
     const followers = computed(() => $store.state.account.followers);
+    const followings = computed(() => $store.state.account.followings);
 
     return {
       tab: ref('followers'),
       followers,
+      followings,
     };
   },
-  // data() {
-  //   return {
-  //     followings: [],
-  //   };
-  // },
-  // created() {
-  //   axios
-  //     .get(`http://localhost:3000/accounts/${String(this.targetId)}/following`)
-  //     .then((result) => {
-  //       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //       this.followings = result.data;
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // },
 };
 </script>
 
