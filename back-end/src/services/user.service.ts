@@ -6,8 +6,14 @@ import { UserDto } from 'src/models/user.dto';
 import { UserRepository } from 'src/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
 import { Record, Result } from 'neo4j-driver';
+import { AuthenticationError } from 'src/error/authentication.error';
 @Injectable()
 export class UserService {
+  public async findUserByEmail(email: string) {
+    const foundUser = await this.userRepository.findByEmail(email);
+    foundUser.password = undefined;
+    return foundUser;
+  }
   private saltRounds = 10;
 
   public async signinUser(userDto: UserDto): Promise<UserDto> {
@@ -17,7 +23,7 @@ export class UserService {
 
     const isMatch = await bcrypt.compare(userDto.password, storedPassword);
     if (!isMatch) {
-      throw new Error('틀린 비밀번호');
+      throw new AuthenticationError('틀린 비밀번호');
     }
 
     foundUser.password = undefined;

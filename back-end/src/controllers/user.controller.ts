@@ -10,6 +10,8 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { AuthenticationError } from 'src/error/authentication.error';
+import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
 import { UserService } from 'src/services/user.service';
 
@@ -18,21 +20,6 @@ import { UserService } from 'src/services/user.service';
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  // @Get('/:userId')
-  // getUser(@Param('userId') userId: string, @Res() res: Response) {
-  //   res.status(HttpStatus.OK);
-
-  //   this.userService
-  //     .findUser(userId)
-  //     .then((m) => {
-  //       res.status(HttpStatus.OK).json(m);
-  //     })
-  //     .catch((err) => {
-  //       res.status(HttpStatus.BAD_REQUEST).send();
-  //       console.log(err);
-  //     });
-  // }
 
   @Get('/:userName')
   async searchUsername(
@@ -46,6 +33,21 @@ export class UserController {
     } catch (err) {
       console.log(err);
       res.status(HttpStatus.BAD_GATEWAY).send();
+    }
+  }
+
+  @Get('/email/:email')
+  async searchEmail(@Param('email') email: string, @Res() res: Response) {
+    try {
+      const userDto = await this.userService.findUserByEmail(email);
+      res.status(HttpStatus.OK).json(userDto);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof ResourceError) {
+        res.status(err.httpStatus).json(err);
+      } else {
+        res.status(HttpStatus.BAD_GATEWAY).send();
+      }
     }
   }
 
@@ -70,7 +72,11 @@ export class UserController {
       res.status(HttpStatus.OK).json(user).send();
     } catch (err) {
       console.log(err.toString());
-      res.status(HttpStatus.BAD_GATEWAY).json(err).send();
+      if (err instanceof AuthenticationError) {
+        res.status(err.httpStatus).json(err);
+      } else {
+        res.status(HttpStatus.BAD_GATEWAY).send();
+      }
     }
   }
 }

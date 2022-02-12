@@ -1,4 +1,5 @@
 import { Record, Result } from 'neo4j-driver';
+import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
 import { executeQuery, stringify } from './connection-pools/neo4j.db';
 
@@ -7,7 +8,7 @@ export class UserRepository {
     const result = await executeQuery<Record>(
       `MATCH (user) WHERE user.email = '${email}' RETURN user`,
     );
-    if (result.length == 0) throw new Error('이메일 없음');
+    if (result.length == 0) throw new ResourceError('이메일 없음');
     return result[0].get('user').properties;
   }
 
