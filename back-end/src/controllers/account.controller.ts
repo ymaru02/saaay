@@ -96,4 +96,13 @@ export class AccountController {
       throw new BadRequestException('블락 리스트에 없는 유저입니다.');
     }
   }
+
+  @Get(':targetId/blocklist')
+  async getBlockList(
+    @Param('targetId') targetId: string,
+    @Res() res: Response,
+  ) {
+    const blockList = await this.accountService.getBlockList(targetId);
+    res.status(HttpStatus.OK).json(blockList);
+  }
 }

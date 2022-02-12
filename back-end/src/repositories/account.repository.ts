@@ -153,3 +153,20 @@ export async function deleteBlock(targetId: string, myId: string) {
   await driver().close();
   return true;
 }
+
+export async function getBlockList(targetId: string) {
+  let result;
+  const session = driver().session();
+
+  try {
+    result = await session.run(
+      `MATCH (me) - [:BLOCK] -> (target) WHERE id(me) = ${targetId} RETURN target`,
+    );
+  } finally {
+    await session.close();
+  }
+
+  await driver().close();
+
+  return result.records;
+}
