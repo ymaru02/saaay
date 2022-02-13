@@ -6,7 +6,11 @@ interface follow {
   _fields: [
     {
       identity: { low: string; high: string };
-      properties: { isFollower: boolean; isFollowing: boolean };
+      properties: {
+        isFollower: boolean;
+        isFollowing: boolean;
+        username: string;
+      };
     }
   ];
 }
@@ -22,6 +26,7 @@ interface block {
 
 const mutation: MutationTree<AccountStateInterface> = {
   getOwner(state: AccountStateInterface, data: follow[]) {
+    // state.owner = data[0]._fields[0].properties.username;
     state.owner = data;
   },
 

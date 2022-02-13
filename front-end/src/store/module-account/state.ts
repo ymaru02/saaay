@@ -3,7 +3,11 @@ interface follow {
   _fields: [
     {
       identity: { low: string; high: string };
-      properties: { isFollower: boolean; isFollowing: boolean };
+      properties: {
+        isFollower: boolean;
+        isFollowing: boolean;
+        username: string;
+      };
     }
   ];
 }

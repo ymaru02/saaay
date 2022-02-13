@@ -1,8 +1,26 @@
 <template>
   <div class="q-pa-md">
-    <div>{{ owner }}</div>
     <div class="row">
       <div class="col-8 offset-2">
+        <div v-for="(own, index) in owner" :key="`onwer-${index}`">
+          <div class="row justify-center">
+            <div class="col-1">
+              <img
+                src="images/blank-profile-picture.png"
+                alt="profile-image"
+                class="profile q-mb-sm"
+              />
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <div class="offset-1 text-bold">
+              {{ own._fields[0].properties.username }}
+            </div>
+          </div>
+          <div class="flex justify-center text-grey q-mb-md">
+            <div class="offset-1">@{{ own._fields[0].properties.email }}</div>
+          </div>
+        </div>
         <q-card>
           <q-tabs
             v-model="tab"
@@ -16,7 +34,7 @@
             <q-tab name="followers" label="Followers" />
             <q-tab name="following" label="Following" />
             <!-- TODO: 로그인한 유저로 변경 -->
-            <q-tab name="blocklist" label="BlockList" />
+            <q-tab name="blocklist" label="BlockList" v-if="targetId === '4'" />
           </q-tabs>
 
           <q-separator />
@@ -277,6 +295,7 @@ export default {
     return {
       tab: ref('followers'),
       owner,
+      targetId,
       followers,
       followings,
       blockList,
