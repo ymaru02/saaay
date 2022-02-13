@@ -46,6 +46,12 @@ export class AccountController {
     res.status(HttpStatus.OK).json(followerList);
   }
 
+  @Get(':myId/my-following')
+  async myFollowing(@Param('myId') myId: string, @Res() res: Response) {
+    const followingList = await this.accountService.myFollowing(myId);
+    res.status(HttpStatus.OK).json(followingList);
+  }
+
   @Post(':targetId/follow')
   async addMyFollowingList(
     @Param('targetId') targetId: string,

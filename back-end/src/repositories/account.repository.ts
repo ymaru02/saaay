@@ -93,6 +93,27 @@ export async function getFollowingList(targetId: string) {
   return result.records;
 }
 
+export async function myFollowing(myId: string) {
+  let result;
+  const followingList = [];
+  const session = driver().session();
+
+  try {
+    result = await session.run(
+      `MATCH (me) - [:FOLLOW] -> (target) WHERE id(me) = ${myId} RETURN target`,
+    );
+  } finally {
+    await session.close();
+  }
+  for (const record of result.records) {
+    followingList.push(record._fields[0].identity.low);
+  }
+
+  await driver().close();
+
+  return followingList;
+}
+
 export async function addFollow(targetId: string, myId: string) {
   let result;
   const session = driver().session();
