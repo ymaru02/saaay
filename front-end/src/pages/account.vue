@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-md">
+    <div>{{ owner }}</div>
     <div class="row">
       <div class="col-8 offset-2">
         <q-card>
@@ -14,6 +15,7 @@
           >
             <q-tab name="followers" label="Followers" />
             <q-tab name="following" label="Following" />
+            <!-- TODO: 로그인한 유저로 변경 -->
             <q-tab name="blocklist" label="BlockList" />
           </q-tabs>
 
@@ -188,7 +190,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onUpdated, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 
@@ -197,18 +199,37 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const $store = useStore();
-    let targetId = computed(() => route.params.targetId).value;
+    // let targetId = route.params.targetId;
 
-    onUpdated(() => {
-      targetId = route.params.targetId;
-      $store.dispatch('account/getFollowerList', targetId).catch(console.log);
-      $store.dispatch('account/getFollowingList', targetId).catch(console.log);
-      $store.dispatch('account/getBlockList', targetId).catch(console.log);
-    });
+    $store
+      .dispatch('account/getOwner', route.params.targetId)
+      .catch(console.log);
+    $store
+      .dispatch('account/getFollowerList', route.params.targetId)
+      .catch(console.log);
+    $store
+      .dispatch('account/getFollowingList', route.params.targetId)
+      .catch(console.log);
+    $store
+      .dispatch('account/getBlockList', route.params.targetId)
+      .catch(console.log);
 
-    $store.dispatch('account/getFollowerList', targetId).catch(console.log);
-    $store.dispatch('account/getFollowingList', targetId).catch(console.log);
-    $store.dispatch('account/getBlockList', targetId).catch(console.log);
+    // onUpdated(() => {
+    //   // targetId = route.params.targetId;
+    //   // $store
+    //   //   .dispatch('account/getOwner', route.params.targetId)
+    //   //   .catch(console.log);
+    //   $store
+    //     .dispatch('account/getFollowerList', route.params.targetId)
+    //     .catch(console.log);
+    //   $store
+    //     .dispatch('account/getFollowingList', route.params.targetId)
+    //     .catch(console.log);
+    //   $store
+    //     .dispatch('account/getBlockList', route.params.targetId)
+    //     .catch(console.log);
+    //   // console.log('aa');
+    // });
 
     const addMyFollowingList = (targetId: string) =>
       $store.dispatch('account/addMyFollowingList', targetId);
@@ -231,13 +252,31 @@ export default {
     };
 
     // onUpdated(() => router.go(0));
+    const owner = computed(() => $store.state.account.owner);
+    const targetId = computed(() => route.params.targetId);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
     const blockListId = computed(() => $store.state.account.blockListId);
 
+    watch(targetId, () => {
+      $store
+        .dispatch('account/getOwner', route.params.targetId)
+        .catch(console.log);
+      $store
+        .dispatch('account/getFollowerList', route.params.targetId)
+        .catch(console.log);
+      $store
+        .dispatch('account/getFollowingList', route.params.targetId)
+        .catch(console.log);
+      $store
+        .dispatch('account/getBlockList', route.params.targetId)
+        .catch(console.log);
+    });
+
     return {
       tab: ref('followers'),
+      owner,
       followers,
       followings,
       blockList,

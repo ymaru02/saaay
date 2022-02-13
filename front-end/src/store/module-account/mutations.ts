@@ -21,6 +21,10 @@ interface block {
 }
 
 const mutation: MutationTree<AccountStateInterface> = {
+  getOwner(state: AccountStateInterface, data: follow[]) {
+    state.owner = data;
+  },
+
   getFollowerList(state: AccountStateInterface, data: follow[]) {
     state.followers = data;
   },

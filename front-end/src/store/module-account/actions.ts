@@ -13,6 +13,13 @@ interface block {
 }
 
 const actions: ActionTree<AccountStateInterface, StateInterface> = {
+  async getOwner({ commit }, targetId: string) {
+    const result = await axios.get(
+      `http://localhost:3000/accounts/${targetId}/owner`
+    );
+    commit('getOwner', result.data);
+  },
+
   async getFollowerList({ commit }, targetId: string) {
     const result = await axios.get(
       `http://localhost:3000/accounts/${targetId}/follower`
