@@ -63,7 +63,14 @@
                       >
                         {{ follower._fields[0].properties.username }}
                       </div>
-                      <div class="q-ml-lg">Follows You</div>
+                      <div
+                        class="q-ml-lg"
+                        v-if="
+                          myFollower.includes(follower._fields[0].identity.low)
+                        "
+                      >
+                        Follows You
+                      </div>
                     </div>
                     <p>
                       {{ follower._fields[0].properties.biography }}
@@ -73,8 +80,9 @@
                     <!-- TODO: 로그인한 유저로 변경 -->
                     <q-btn
                       v-if="
-                        follower._fields[0].properties.isFollowing &&
-                        follower._fields[0].identity.low != '4'
+                        myFollowing.includes(
+                          follower._fields[0].identity.low
+                        ) && follower._fields[0].identity.low != '4'
                       "
                       @click="
                         deleteMyFollowingList(follower._fields[0].identity.low)
@@ -86,8 +94,9 @@
                     />
                     <q-btn
                       v-else-if="
-                        !follower._fields[0].properties.isFollowing &&
-                        follower._fields[0].identity.low != '4'
+                        !myFollowing.includes(
+                          follower._fields[0].identity.low
+                        ) && follower._fields[0].identity.low != '4'
                       "
                       @click="
                         addMyFollowingList(follower._fields[0].identity.low)
@@ -129,7 +138,9 @@
                       </div>
                       <div
                         class="q-ml-lg"
-                        v-if="following._fields[0].properties.isFollower"
+                        v-if="
+                          myFollower.includes(following._fields[0].identity.low)
+                        "
                       >
                         Follows You
                       </div>
@@ -142,8 +153,9 @@
                     <!-- TODO: 로그인한 유저로 변경 -->
                     <q-btn
                       v-if="
-                        following._fields[0].properties.isFollowing &&
-                        following._fields[0].identity.low != '4'
+                        myFollowing.includes(
+                          following._fields[0].identity.low
+                        ) && following._fields[0].identity.low != '4'
                       "
                       @click="
                         deleteMyFollowingList(following._fields[0].identity.low)
@@ -155,8 +167,9 @@
                     />
                     <q-btn
                       v-else-if="
-                        !following._fields[0].properties.isFollowing &&
-                        following._fields[0].identity.low != '4'
+                        !myFollowing.includes(
+                          following._fields[0].identity.low
+                        ) && following._fields[0].identity.low != '4'
                       "
                       @click="
                         addMyFollowingList(following._fields[0].identity.low)

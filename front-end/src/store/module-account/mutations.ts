@@ -58,6 +58,8 @@ const mutation: MutationTree<AccountStateInterface> = {
         following._fields[0].properties.isFollowing = true;
       }
     }
+
+    state.myFollowing.push(targetId);
   },
 
   deleteMyFollowingList(state: AccountStateInterface, targetId: string) {
@@ -72,6 +74,10 @@ const mutation: MutationTree<AccountStateInterface> = {
         following._fields[0].properties.isFollowing = false;
       }
     }
+
+    state.myFollowing = state.myFollowing.filter((following) => {
+      return following !== targetId;
+    });
   },
 
   getBlockList(state: AccountStateInterface, data: block[]) {
