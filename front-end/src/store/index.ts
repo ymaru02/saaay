@@ -5,6 +5,8 @@ import {
   Store as VuexStore,
   useStore as vuexUseStore,
 } from 'vuex';
+import schedule from './schedule';
+import { ScheduleStateInterface } from './schedule/state';
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -23,6 +25,7 @@ export interface StateInterface {
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   example: unknown;
+  schedule: ScheduleStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -40,6 +43,7 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
       // example
+      schedule,
     },
 
     // enable strict mode (adds overhead!)
