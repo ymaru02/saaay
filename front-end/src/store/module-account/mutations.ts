@@ -30,6 +30,10 @@ const mutation: MutationTree<AccountStateInterface> = {
     state.owner = data;
   },
 
+  myFollower(state: AccountStateInterface, data: string[]) {
+    state.myFollower = data;
+  },
+
   getFollowerList(state: AccountStateInterface, data: follow[]) {
     state.followers = data;
   },

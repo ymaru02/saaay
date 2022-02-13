@@ -24,6 +24,7 @@ interface block {
 export interface AccountStateInterface {
   prop: boolean;
   owner: follow[];
+  myFollower: string[];
   followers: follow[];
   followings: follow[];
   blockList: block[];
@@ -34,6 +35,7 @@ function state(): AccountStateInterface {
   return {
     prop: false,
     owner: [],
+    myFollower: [],
     followers: [],
     followings: [],
     blockList: [],

@@ -34,7 +34,7 @@
             <q-tab name="followers" label="Followers" />
             <q-tab name="following" label="Following" />
             <!-- TODO: 로그인한 유저로 변경 -->
-            <q-tab name="blocklist" label="BlockList" v-if="targetId === '4'" />
+            <q-tab name="blocklist" label="BlockList" v-if="targetId == '4'" />
           </q-tabs>
 
           <q-separator />
@@ -70,8 +70,12 @@
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
+                    <!-- TODO: 로그인한 유저로 변경 -->
                     <q-btn
-                      v-if="follower._fields[0].properties.isFollowing"
+                      v-if="
+                        follower._fields[0].properties.isFollowing &&
+                        follower._fields[0].identity.low != '4'
+                      "
                       @click="
                         deleteMyFollowingList(follower._fields[0].identity.low)
                       "
@@ -81,7 +85,10 @@
                       label="FOLLOWING"
                     />
                     <q-btn
-                      v-else
+                      v-else-if="
+                        !follower._fields[0].properties.isFollowing &&
+                        follower._fields[0].identity.low != '4'
+                      "
                       @click="
                         addMyFollowingList(follower._fields[0].identity.low)
                       "
@@ -132,8 +139,12 @@
                     </p>
                   </div>
                   <div class="col-2 flex flex-center">
+                    <!-- TODO: 로그인한 유저로 변경 -->
                     <q-btn
-                      v-if="following._fields[0].properties.isFollowing"
+                      v-if="
+                        following._fields[0].properties.isFollowing &&
+                        following._fields[0].identity.low != '4'
+                      "
                       @click="
                         deleteMyFollowingList(following._fields[0].identity.low)
                       "
@@ -143,7 +154,10 @@
                       label="FOLLOWING"
                     />
                     <q-btn
-                      v-else
+                      v-else-if="
+                        !following._fields[0].properties.isFollowing &&
+                        following._fields[0].identity.low != '4'
+                      "
                       @click="
                         addMyFollowingList(following._fields[0].identity.low)
                       "
@@ -218,7 +232,10 @@ export default {
     const router = useRouter();
     const $store = useStore();
     // let targetId = route.params.targetId;
+    // TODO: 로그인한 유저로 변경
+    const myId = '4';
 
+    $store.dispatch('account/myFollower', myId).catch(console.log);
     $store
       .dispatch('account/getOwner', route.params.targetId)
       .catch(console.log);
@@ -272,6 +289,7 @@ export default {
     // onUpdated(() => router.go(0));
     const owner = computed(() => $store.state.account.owner);
     const targetId = computed(() => route.params.targetId);
+    const myFollower = computed(() => $store.state.account.myFollower);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
@@ -296,6 +314,7 @@ export default {
       tab: ref('followers'),
       owner,
       targetId,
+      myFollower,
       followers,
       followings,
       blockList,
