@@ -16,6 +16,12 @@ import { AccountService } from '../services/account.service';
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
+  @Get(':targetId/owner')
+  async getOwner(@Param('targetId') targetId: string, @Res() res: Response) {
+    const owner = await this.accountService.getOwner(targetId);
+    res.status(HttpStatus.OK).json(owner);
+  }
+
   @Get(':targetId/follower')
   async getFollowerList(
     @Param('targetId') targetId: string,

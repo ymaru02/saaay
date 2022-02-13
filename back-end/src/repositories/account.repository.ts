@@ -1,4 +1,10 @@
-import { driver } from './connection-pools/neo4j.db';
+import { driver, executeQuery } from './connection-pools/neo4j.db';
+
+export async function getOwner(targetId: string) {
+  return await executeQuery(
+    `MATCH (target) WHERE id(target) = ${targetId} RETURN target`,
+  );
+}
 
 export async function getFollowerList(targetId: string) {
   let result;

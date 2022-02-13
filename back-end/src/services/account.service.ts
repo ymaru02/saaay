@@ -7,10 +7,16 @@ import {
   addBlock,
   deleteBlock,
   getBlockList,
+  getOwner,
 } from '../repositories/account.repository';
 
 @Injectable()
 export class AccountService {
+  public async getOwner(targetId: string) {
+    const result = await getOwner(targetId);
+    return result;
+  }
+
   public async getFollowerList(targetId: string) {
     const result = await getFollowerList(targetId);
     return result;
