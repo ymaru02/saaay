@@ -39,6 +39,27 @@ export async function getFollowerList(targetId: string) {
   return result.records;
 }
 
+export async function myFollower(myId: string) {
+  let result;
+  const followerList = [];
+  const session = driver().session();
+
+  try {
+    result = await session.run(
+      `MATCH (me) <- [:FOLLOW] - (target) WHERE id(me) = ${myId} RETURN target`,
+    );
+  } finally {
+    await session.close();
+  }
+  for (const record of result.records) {
+    followerList.push(record._fields[0].identity.low);
+  }
+
+  await driver().close();
+
+  return followerList;
+}
+
 export async function getFollowingList(targetId: string) {
   let result;
   const followerId = [];
