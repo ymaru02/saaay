@@ -3,22 +3,26 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/layouts/PreviewLayout.vue'),
+    children: [{ path: '', component: () => import('src/pages/PreIndex.vue') }],
+  },
+  {
+    path: '/main',
+    component: () => import('src/layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
+      { path: '', component: () => import('src/pages/Index.vue') },
       { path: '/calendar', component: () => import('pages/Calendar.vue') },
     ],
   },
-
   {
     path: '/account',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/account.vue') }],
   },
 
   {
     path: '/calendar',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Calendar.vue') }],
   },
 
