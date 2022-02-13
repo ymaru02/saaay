@@ -236,6 +236,7 @@ export default {
     const myId = '4';
 
     $store.dispatch('account/myFollower', myId).catch(console.log);
+    $store.dispatch('account/myFollowing', myId).catch(console.log);
     $store
       .dispatch('account/getOwner', route.params.targetId)
       .catch(console.log);
@@ -290,6 +291,7 @@ export default {
     const owner = computed(() => $store.state.account.owner);
     const targetId = computed(() => route.params.targetId);
     const myFollower = computed(() => $store.state.account.myFollower);
+    const myFollowing = computed(() => $store.state.account.myFollowing);
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
@@ -315,6 +317,7 @@ export default {
       owner,
       targetId,
       myFollower,
+      myFollowing,
       followers,
       followings,
       blockList,

@@ -27,6 +27,13 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     commit('myFollower', result.data);
   },
 
+  async myFollowing({ commit }, myId: string) {
+    const result = await axios.get(
+      `http://localhost:3000/accounts/${myId}/my-following`
+    );
+    commit('myFollowing', result.data);
+  },
+
   async getFollowerList({ commit }, targetId: string) {
     const result = await axios.get(
       `http://localhost:3000/accounts/${targetId}/follower`
