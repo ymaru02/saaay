@@ -131,8 +131,15 @@ import * as _ from 'lodash';
 import 'swiper/css';
 import gsap from 'gsap';
 import ScrollMagic from 'scrollmagic';
+// import { useStore } from 'src/store';
+import { useRoute } from 'vue-router';
 
 export default {
+  setup() {
+    const $store = useRoute();
+    console.log($store);
+    // You can use the $store, example: $store.state.someStoreModule.someData
+  },
   mounted() {
     //  * 페이지 스크롤에 따른 요소 제어
     // 페이지 스크롤에 영향을 받는 요소들을 검색!
