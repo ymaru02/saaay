@@ -37,7 +37,10 @@
                   </div>
                   <div class="col-9 q-pl-lg row">
                     <div class="col-12 row flex items-end">
-                      <div class="text-h5">
+                      <div
+                        class="text-h5 name"
+                        @click="newFollowers(follower._fields[0].identity.low)"
+                      >
                         {{ follower._fields[0].properties.username }}
                       </div>
                       <div class="q-ml-lg">Follows You</div>
@@ -89,7 +92,12 @@
                   </div>
                   <div class="col-9 q-pl-lg row">
                     <div class="col-12 row flex items-end">
-                      <div class="text-h5">
+                      <div
+                        class="text-h5 name"
+                        @click="
+                          newFollowings(following._fields[0].identity.low)
+                        "
+                      >
                         {{ following._fields[0].properties.username }}
                       </div>
                       <div
@@ -180,15 +188,23 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, onUpdated, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const $store = useStore();
-    const targetId = route.params.targetId;
+    let targetId = computed(() => route.params.targetId).value;
+
+    onUpdated(() => {
+      targetId = route.params.targetId;
+      $store.dispatch('account/getFollowerList', targetId).catch(console.log);
+      $store.dispatch('account/getFollowingList', targetId).catch(console.log);
+      $store.dispatch('account/getBlockList', targetId).catch(console.log);
+    });
 
     $store.dispatch('account/getFollowerList', targetId).catch(console.log);
     $store.dispatch('account/getFollowingList', targetId).catch(console.log);
@@ -206,6 +222,15 @@ export default {
     const deleteMyBlockList = (targetId: string) =>
       $store.dispatch('account/deleteMyBlockList', targetId);
 
+    const newFollowers = async (newId: string) => {
+      await router.push(`${newId}`);
+    };
+
+    const newFollowings = async (newId: string) => {
+      await router.push(`${newId}`);
+    };
+
+    // onUpdated(() => router.go(0));
     const followers = computed(() => $store.state.account.followers);
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
@@ -221,6 +246,8 @@ export default {
       deleteMyFollowingList,
       addMyBlockList,
       deleteMyBlockList,
+      newFollowers,
+      newFollowings,
     };
   },
 };
@@ -232,5 +259,9 @@ export default {
   width: 100%;
   height: auto;
   overflow: hidden;
+}
+
+.name {
+  cursor: pointer;
 }
 </style>
