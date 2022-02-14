@@ -250,12 +250,19 @@ export default {
     const router = useRouter();
     const $store = useStore();
     // let targetId = route.params.targetId;
+    const targetId = computed(() => route.params.targetId);
 
-    // TODO: 로그인한 유저로 변경
     let myId: string;
     myId = '';
-    const accessToken =
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzYWZ5MUBzc2FmeS5jb20iLCJpZCI6MSwiaWF0IjoxNjQ0ODUyOTM0LCJleHAiOjE2NDQ4NTY1MzR9.x0n6irr3vQqkYjQCCV8xJ-S3SkNqZZjKhDeTXpImDJI';
+    let accessToken: string;
+    accessToken = '';
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const data = cookie.split('=');
+      if (data[0] === 'access_token') {
+        accessToken = data[1];
+      }
+    }
     if (accessToken) {
       const base64Url = accessToken.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -273,8 +280,10 @@ export default {
       myId = data.id;
     }
 
-    $store.dispatch('account/myFollower', myId).catch(console.log);
-    $store.dispatch('account/myFollowing', myId).catch(console.log);
+    if (myId) {
+      $store.dispatch('account/myFollower', myId).catch(console.log);
+      $store.dispatch('account/myFollowing', myId).catch(console.log);
+    }
     $store
       .dispatch('account/getOwner', route.params.targetId)
       .catch(console.log);
@@ -284,12 +293,15 @@ export default {
     $store
       .dispatch('account/getFollowingList', route.params.targetId)
       .catch(console.log);
-    $store
-      .dispatch('account/getBlockList', {
-        targetId: route.params.targetId,
-        accessToken,
-      })
-      .catch(console.log);
+
+    if (+targetId.value === +myId) {
+      $store
+        .dispatch('account/getBlockList', {
+          targetId: route.params.targetId,
+          accessToken,
+        })
+        .catch(console.log);
+    }
 
     // onUpdated(() => {
     //   // targetId = route.params.targetId;
@@ -333,7 +345,6 @@ export default {
 
     // onUpdated(() => router.go(0));
     const owner = computed(() => $store.state.account.owner);
-    const targetId = computed(() => route.params.targetId);
     const myFollower = computed(() => $store.state.account.myFollower);
     const myFollowing = computed(() => $store.state.account.myFollowing);
     const followers = computed(() => $store.state.account.followers);
@@ -351,12 +362,14 @@ export default {
       $store
         .dispatch('account/getFollowingList', route.params.targetId)
         .catch(console.log);
-      $store
-        .dispatch('account/getBlockList', {
-          targetId: route.params.targetId,
-          accessToken,
-        })
-        .catch(console.log);
+      if (+targetId.value === +myId) {
+        $store
+          .dispatch('account/getBlockList', {
+            targetId: route.params.targetId,
+            accessToken,
+          })
+          .catch(console.log);
+      }
     });
 
     return {
