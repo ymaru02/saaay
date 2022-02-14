@@ -12,6 +12,8 @@ import account from './module-account';
 import { AccountStateInterface } from './module-account/state';
 import room from './module-room';
 import { RoomStateInterface } from './module-room/state';
+import signin from './module-signin';
+import { SigninStateInterface } from './module-signin/state';
 
 /*
  * If not building with SSR mode, you can
@@ -29,6 +31,7 @@ export interface StateInterface {
   example: unknown;
   account: AccountStateInterface;
   room: RoomStateInterface;
+  signin: SigninStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -48,6 +51,7 @@ export default store(function (/* { ssrContext } */) {
       // example
       account,
       room,
+      signin,
     },
 
     // enable strict mode (adds overhead!)
