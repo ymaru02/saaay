@@ -153,4 +153,12 @@ export class AccountController {
       res.status(403).send();
     }
   }
+
+  @Get('id')
+  @UseGuards(JwtAuthGuard)
+  async getUserId(@Res() res: Response, @Headers('Authorization') accessToken) {
+    const payload = await this.authService.verifyUser(accessToken);
+    const user = await this.userService.findUserByEmail(payload.email);
+    res.status(HttpStatus.OK).json(user);
+  }
 }
