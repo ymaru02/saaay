@@ -11,10 +11,17 @@
           icon="menu"
         />
 
-        <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
-          <q-icon :name="fabYoutube" color="red" size="28px" />
+        <q-btn
+          flat
+          no-caps
+          no-wrap
+          class="q-ml-xs"
+          v-if="$q.screen.gt.xs"
+          href="/#/main"
+        >
+          <q-icon name="img:images/logo.png" size="50px" />
           <q-toolbar-title shrink class="text-weight-bold">
-            YouTube
+            Say
           </q-toolbar-title>
         </q-btn>
 
@@ -23,12 +30,17 @@
         <div class="YL__toolbar-input-container row no-wrap">
           <q-input
             dense
-            outlined
             square
+            outlined
             v-model="search"
             placeholder="Search"
             class="bg-white col"
-          />
+          >
+            <template v-slot:append>
+              <!-- v-show 추가 -->
+              <q-icon name="close" @click="text = ''" class="cursor-pointer" />
+            </template>
+          </q-input>
           <q-btn
             class="YL__toolbar-input-btn"
             color="grey-3"
@@ -48,6 +60,7 @@
             color="grey-8"
             icon="video_call"
             v-if="$q.screen.gt.sm"
+            href="/#/main"
           >
             <q-tooltip>Create a video or post</q-tooltip>
           </q-btn>
@@ -58,6 +71,7 @@
             color="grey-8"
             icon="apps"
             v-if="$q.screen.gt.sm"
+            href="/#/main"
           >
             <q-tooltip>Apps</q-tooltip>
           </q-btn>
@@ -68,6 +82,7 @@
             color="grey-8"
             icon="message"
             v-if="$q.screen.gt.sm"
+            href="/#/main"
           >
             <q-tooltip>Messages</q-tooltip>
           </q-btn>
@@ -87,7 +102,7 @@
           </q-btn>
           <q-btn round flat>
             <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <img src="images/blank-profile-picture.png" />
             </q-avatar>
             <q-tooltip>Account</q-tooltip>
           </q-btn>
@@ -128,7 +143,7 @@
           <q-separator class="q-mt-md q-mb-xs" />
 
           <q-item-label header class="text-weight-bold text-uppercase">
-            More from Youtube
+            More from
           </q-item-label>
 
           <q-item v-for="link in links3" :key="link.text" v-ripple clickable>
@@ -208,7 +223,7 @@ export default defineComponent({
       links1: [
         { icon: 'home', text: 'Home' },
         { icon: 'whatshot', text: 'Trending' },
-        { icon: 'subscriptions', text: 'Subscriptions' },
+        { icon: 'bookmark', text: 'Subscriptions' },
       ],
       links2: [
         { icon: 'folder', text: 'Library' },
@@ -217,7 +232,6 @@ export default defineComponent({
         { icon: 'thumb_up_alt', text: 'Liked videos' },
       ],
       links3: [
-        { icon: fabYoutube, text: 'YouTube Premium' },
         { icon: 'local_movies', text: 'Movies & Shows' },
         { icon: 'videogame_asset', text: 'Gaming' },
         { icon: 'live_tv', text: 'Live' },
@@ -253,6 +267,9 @@ export default defineComponent({
   &__toolbar-input-container {
     min-width: 100px;
     width: 55%;
+    border-radius: 50%;
+    input {
+    }
   }
   &__toolbar-input-btn {
     border-radius: 0;

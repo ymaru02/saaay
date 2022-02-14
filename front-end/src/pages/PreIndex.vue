@@ -64,6 +64,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+section {
+  font-family: 'Playfair Display', serif;
+  .btn {
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+}
+
 /*BACK TO POSITION*/
 .back-to-position {
   opacity: 0;

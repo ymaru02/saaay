@@ -9,9 +9,9 @@
       <q-toolbar>
         <!-- 왼쪽 로고 -->
         <q-btn flat no-caps no-wrap class="q-ml-xs">
-          <q-icon :name="fabYoutube" color="red" size="28px" />
+          <q-icon name="img:images/logo.png" size="50px" />
           <q-toolbar-title shrink class="text-weight-bold">
-            YouTube
+            Say
           </q-toolbar-title>
         </q-btn>
 
@@ -110,5 +110,3 @@ export default defineComponent({
   }
 }
 </style>
-
-// 폰트 바꾸기 // 앱 지우기
