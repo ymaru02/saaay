@@ -9,6 +9,15 @@ import { Record, Result } from 'neo4j-driver';
 import { AuthenticationError } from 'src/error/authentication.error';
 @Injectable()
 export class UserService {
+  async editPassword(userDto: UserDto) {
+    const hash = await bcrypt.hash(userDto.password, this.saltRounds);
+    userDto.password = hash;
+    await this.userRepository.updatePassword(userDto);
+  }
+  async editProfile(userDto: UserDto) {
+    const updatedUser: UserDto = await this.userRepository.updateUser(userDto);
+    return updatedUser;
+  }
   public async findUserByEmail(email: string) {
     const foundUser = await this.userRepository.findByEmail(email);
     foundUser.password = undefined;

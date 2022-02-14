@@ -7,9 +7,12 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AuthenticationError } from 'src/error/authentication.error';
 import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
@@ -36,10 +39,10 @@ export class UserController {
     }
   }
 
-  @Get('/email/:email')
-  async searchEmail(@Param('email') email: string, @Res() res: Response) {
+  @Post('/email')
+  async searchEmail(@Body() params: { email: string }, @Res() res: Response) {
     try {
-      const userDto = await this.userService.findUserByEmail(email);
+      const userDto = await this.userService.findUserByEmail(params.email);
       res.status(HttpStatus.OK).json(userDto);
     } catch (err) {
       console.log(err);
@@ -77,6 +80,30 @@ export class UserController {
       } else {
         res.status(HttpStatus.BAD_GATEWAY).send();
       }
+    }
+  }
+
+  @Put('/profile')
+  @UseGuards(JwtAuthGuard)
+  async editProfile(@Body() userDto: UserDto, @Res() res: Response) {
+    console.log('edit profile :', userDto);
+    try {
+      const updatedUser = await this.userService.editProfile(userDto);
+      res.status(HttpStatus.OK).json(updatedUser);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  @Patch('/user/password')
+  @UseGuards(JwtAuthGuard)
+  async editPassword(@Body() userDto: UserDto, @Res() res: Response) {
+    console.log('edit password :', userDto);
+    try {
+      await this.userService.editPassword(userDto);
+      res.status(HttpStatus.OK).send();
+    } catch (err) {
+      console.log(err);
     }
   }
 }
