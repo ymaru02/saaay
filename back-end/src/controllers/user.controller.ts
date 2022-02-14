@@ -12,13 +12,11 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { access } from 'fs';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { AuthenticationError } from 'src/error/authentication.error';
 import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
 import { UserService } from 'src/services/user.service';
