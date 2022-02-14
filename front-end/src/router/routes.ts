@@ -4,8 +4,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('src/layouts/PreviewLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/PreIndex.vue') }],
+    children: [
+      { path: '', component: () => import('src/pages/PreIndex.vue') },
+      { path: '/signin', component: () => import('pages/Signin.vue') },
+    ],
   },
+
   {
     path: '/main',
     component: () => import('src/layouts/MainLayout.vue'),
@@ -18,28 +22,29 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
   {
     path: '/chat',
     component: () => import('src/layouts/ChattingLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Chat.vue') }],
   },
+
+  // test
   // 수정 사항
   {
     path: '/account/:targetId',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Account.vue') }],
   },
-
   {
     path: '/calendar',
     component: () => import('src/layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Calendar.vue') }],
   },
-
   {
     name: 'Signin',
     path: '/signin',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/PreviewLayout.vue'),
     children: [{ path: '', component: () => import('pages/Signin.vue') }],
   },
 

@@ -8,7 +8,7 @@
     >
       <q-toolbar>
         <!-- 왼쪽 로고 -->
-        <q-btn flat no-caps no-wrap class="q-ml-xs">
+        <q-btn flat no-caps no-wrap class="q-ml-xs" href="/">
           <q-icon name="img:images/logo.png" size="50px" />
           <q-toolbar-title shrink class="text-weight-bold">
             Say
@@ -51,11 +51,7 @@
           >
             <q-tooltip>Messages</q-tooltip>
           </q-btn>
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <q-badge color="red" text-color="white" floating> 2 </q-badge>
-            <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
-          <q-btn round flat>
+          <q-btn round flat href="/#/signin">
             <q-avatar size="26px">
               <img src="images/blank-profile-picture.png" />
             </q-avatar>

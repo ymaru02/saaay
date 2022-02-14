@@ -51,6 +51,7 @@
               </q-list>
             </q-menu>
           </q-btn>
+          <q-btn round flat icon="close" href="/#/main" />
         </q-toolbar>
       </q-header>
 
