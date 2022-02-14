@@ -12,7 +12,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { AuthenticationError } from 'src/error/authentication.error';
 import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
@@ -22,7 +24,10 @@ import { UserService } from 'src/services/user.service';
 
 @Controller('/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('/:userName')
   async searchUsername(
@@ -66,21 +71,11 @@ export class UserController {
     }
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async signin(@Body() userDto: UserDto, @Res() res: Response) {
-    console.log('login user :', userDto);
-    try {
-      const user = await this.userService.signinUser(userDto);
-      // TODO : Login Token
-      res.status(HttpStatus.OK).json(user).send();
-    } catch (err) {
-      console.log(err.toString());
-      if (err instanceof AuthenticationError) {
-        res.status(err.httpStatus).json(err);
-      } else {
-        res.status(HttpStatus.BAD_GATEWAY).send();
-      }
-    }
+  async login(@Body() userDto: UserDto) {
+    console.log('auth login :', userDto);
+    return this.authService.login(userDto);
   }
 
   @Put('/profile')

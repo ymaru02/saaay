@@ -24,19 +24,6 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Body() userDto: UserDto) {
-    console.log('auth login :', userDto);
-    return this.authService.login(userDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
-
   @Get('/sample')
   getSample(): TodoDto[] {
     return this.sampleService.getTodos();
