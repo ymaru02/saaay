@@ -2,17 +2,24 @@ import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
 import axios from 'axios';
+import { api } from 'src/boot/axios';
 
-interface block {
-  keys: string[];
-  _fields: [
-    {
-      identity: { low: string; high: string };
-    }
-  ];
-}
+// interface block {
+//   keys: string[];
+//   _fields: [
+//     {
+//       identity: { low: string; high: string };
+//     }
+//   ];
+// }
 
 const actions: ActionTree<AccountStateInterface, StateInterface> = {
+  async getUser({ commit }, accessToken: string) {
+    const headers = { Authorization: accessToken };
+    const result = await api.get('accounts/id', { headers });
+    commit('getUser', result.data);
+  },
+
   async getOwner({ commit }, targetId: string) {
     const result = await axios.get(
       `http://localhost:3000/accounts/${targetId}/owner`
@@ -48,33 +55,71 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     commit('getFollowingList', result.data);
   },
 
-  async addMyFollowingList({ commit }, targetId: string) {
-    await axios.post(`http://localhost:3000/accounts/${targetId}/follow`);
-    commit('addMyFollowingList', targetId);
+  async addMyFollowingList(
+    { commit },
+    data: { accessToken: string; targetId: string }
+  ) {
+    const headers = { Authorization: data.accessToken };
+    console.log(headers);
+    await axios.post(
+      `http://localhost:3000/accounts/${data.targetId}/follow`,
+      null,
+      {
+        headers,
+      }
+    );
+    commit('addMyFollowingList', data.targetId);
   },
 
-  async deleteMyFollowingList({ commit }, targetId: string) {
-    await axios.delete(`http://localhost:3000/accounts/${targetId}/follow`);
-    commit('deleteMyFollowingList', targetId);
+  async deleteMyFollowingList(
+    { commit },
+    data: { accessToken: string; targetId: string }
+  ) {
+    const headers = { Authorization: data.accessToken };
+    await axios.delete(
+      `http://localhost:3000/accounts/${data.targetId}/follow`,
+      { headers }
+    );
+    commit('deleteMyFollowingList', data.targetId);
   },
 
-  async getBlockList({ commit }, targetId: string) {
+  async getBlockList(
+    { commit },
+    data: { accessToken: string; targetId: string }
+  ) {
+    const headers = { Authorization: data.accessToken };
     const result = await axios.get(
-      `http://localhost:3000/accounts/${targetId}/blocklist`
+      `http://localhost:3000/accounts/${data.targetId}/blocklist`,
+      { headers }
     );
     commit('getBlockList', result.data);
   },
 
-  async addMyBlockList({ commit }, target: block) {
+  async addMyBlockList(
+    { commit },
+    data: { accessToken: string; targetId: string }
+  ) {
+    const headers = { Authorization: data.accessToken };
     await axios.post(
-      `http://localhost:3000/accounts/${target._fields[0].identity.low}/block`
+      `http://localhost:3000/accounts/${data.targetId}/block`,
+      null,
+      {
+        headers,
+      }
     );
-    commit('addMyBlockList', target);
+    commit('addMyBlockList', data.targetId);
   },
 
-  async deleteMyBlockList({ commit }, targetId: string) {
-    await axios.delete(`http://localhost:3000/accounts/${targetId}/block`);
-    commit('deleteMyBlockList', targetId);
+  async deleteMyBlockList(
+    { commit },
+    data: { accessToken: string; targetId: string }
+  ) {
+    const headers = { Authorization: data.accessToken };
+    await axios.delete(
+      `http://localhost:3000/accounts/${data.targetId}/block`,
+      { headers }
+    );
+    commit('deleteMyBlockList', data.targetId);
   },
 };
 
