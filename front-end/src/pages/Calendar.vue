@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// import axios from 'axios';
 import '@fullcalendar/core/vdom'; // solve problem with Vite
 import FullCalendar, {
   CalendarOptions,
@@ -20,9 +19,8 @@ import FullCalendar, {
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import { useStore } from 'src/store';
+import { useStore } from 'src/store';
+import { useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
@@ -30,7 +28,7 @@ export default defineComponent({
     FullCalendar,
   },
   setup() {
-    // const $store = useStore();
+    const $store = useStore();
     const $q = useQuasar();
     let currentEvents = [] as EventApi[];
 
@@ -85,6 +83,7 @@ export default defineComponent({
       })
         .onOk(() => {
           arg.event.remove();
+          // db에서도 삭제할 수 있도록 함
         })
         .onCancel(() => {
           // console.log('>>>> Cancel')
@@ -100,13 +99,14 @@ export default defineComponent({
         // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 backend data보내기
         for (let i = 0; i < currentEvents.length; i++) {
           if (currentEvents[i].allDay === false) {
+            console.log(currentEvents[i].start);
             // backend로 보내기
 
             currentEvents.splice(i);
           }
         }
       }
-      console.log(currentEvents);
+      // console.log(currentEvents);
     };
 
     // fullcalendar options
@@ -137,21 +137,14 @@ export default defineComponent({
       navLinks: true, // 날짜를 선택하면 Day 캘린더나 Week 캘린더로 링크
       select: handleDateSelect, // 날짜 선택 후 event 등록
       eventClick: handleEventClick,
-      eventsSet: changeEvent,
+      eventsSet: changeEvent, // 등록한 일정, 변경된 일정 check
     } as CalendarOptions;
 
-    // 이미 등록되어있는 이벤트는 eventSet에 추가
-    // function getEvents() {
-    //   const accessToken = localStorage.getItem('accssToken');
-    //   axios({
-    //     method: 'get',
-    //     url: 'http://localhost:3000/schdule/list',
-    //     headers: {
-    //       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   }).then((res) => {});
-    // }
+    // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
+    const $route = useRoute();
+    $store
+      .dispatch('calendar/addEvent', $route.params.userId)
+      .catch(console.log);
 
     return {
       calendarOptions,

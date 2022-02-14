@@ -1,4 +1,5 @@
 import {
+  // Param,
   Body,
   Controller,
   Delete,
@@ -19,13 +20,16 @@ export class ScheduleController {
   @Get('/list')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async getScheduleList(
+    // @Param('userId') userId: string,
     @Body()
     params: {
-      email: string,
+      email: string;
     },
     @Res() res: Response,
   ) {
-    const scheduleList = await this.scheduleService.getScheduleList(params.email);
+    const scheduleList = await this.scheduleService.getScheduleList(
+      params.email,
+    );
     res.status(HttpStatus.OK).json(scheduleList);
   }
 
@@ -34,12 +38,15 @@ export class ScheduleController {
   async createSchedule(
     @Body()
     params: {
-      email: string,
-      date: string,
+      email: string;
+      date: string;
     },
     @Res() res: Response,
   ) {
-    const schedule = await this.scheduleService.createSchedule(params.email, params.date);
+    const schedule = await this.scheduleService.createSchedule(
+      params.email,
+      params.date,
+    );
     res.status(HttpStatus.CREATED).json(schedule);
   }
 
@@ -48,13 +55,17 @@ export class ScheduleController {
   async updateSchedule(
     @Body()
     params: {
-      email: string,
-      date: string,
-      update_date: string
+      email: string;
+      date: string;
+      update_date: string;
     },
     @Res() res: Response,
   ) {
-    const schedule = await this.scheduleService.updateSchedule(params.email, params.date, params.update_date);
+    const schedule = await this.scheduleService.updateSchedule(
+      params.email,
+      params.date,
+      params.update_date,
+    );
     res.status(HttpStatus.OK).json(schedule);
   }
 
@@ -63,12 +74,15 @@ export class ScheduleController {
   async deleteSchedule(
     @Body()
     params: {
-      email: string,
-      date: string,
+      email: string;
+      date: string;
     },
     @Res() res: Response,
   ) {
-    const schedule = await this.scheduleService.deleteSchedule(params.email, params.date);
+    const schedule = await this.scheduleService.deleteSchedule(
+      params.email,
+      params.date,
+    );
     res.status(HttpStatus.OK).json(schedule);
   }
 }

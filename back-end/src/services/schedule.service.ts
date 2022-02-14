@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { getScheduleList, createSchedule, updateSchedule, deleteSchedule } from '../repositories/schedule.repository'
+import {
+  getScheduleList,
+  createSchedule,
+  updateSchedule,
+  deleteSchedule,
+} from '../repositories/schedule.repository';
 
 @Injectable()
 export class ScheduleService {
@@ -13,7 +18,11 @@ export class ScheduleService {
     return result;
   }
 
-  public async updateSchedule(email: string, date: string, update_date: string) {
+  public async updateSchedule(
+    email: string,
+    date: string,
+    update_date: string,
+  ) {
     const result = await updateSchedule(email, date, update_date);
     return result;
   }

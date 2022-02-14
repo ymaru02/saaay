@@ -11,13 +11,13 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/account',
+    path: '/account/:targetId',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/account.vue') }],
+    children: [{ path: '', component: () => import('pages/Account.vue') }],
   },
 
   {
-    path: '/calendar',
+    path: '/calendar/:userId',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Calendar.vue') }],
   },

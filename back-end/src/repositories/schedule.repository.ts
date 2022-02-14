@@ -12,7 +12,7 @@ export async function getScheduleList(email: string) {
     );
 
     for (const rec of result.records) {
-      dateList.push(rec._fields[0].properties.date);
+      dateList.push(rec);
     }
   } finally {
     await session.close();

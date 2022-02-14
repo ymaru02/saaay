@@ -10,6 +10,8 @@ import { ScheduleStateInterface } from './schedule/state';
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
+import account from './module-account';
+import { AccountStateInterface } from './module-account/state';
 
 /*
  * If not building with SSR mode, you can
@@ -21,11 +23,13 @@ import { ScheduleStateInterface } from './schedule/state';
  */
 
 export interface StateInterface {
+  accessToken: any;
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   example: unknown;
   schedule: ScheduleStateInterface;
+  account: AccountStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -44,6 +48,7 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       // example
       schedule,
+      account,
     },
 
     // enable strict mode (adds overhead!)
