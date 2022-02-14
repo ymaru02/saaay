@@ -31,8 +31,18 @@ export default defineComponent({
     const $store = useStore();
     const $q = useQuasar();
     let currentEvents = [] as EventApi[];
+    // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
+    const $route = useRoute();
+    $store
+      .dispatch('schedule/addEvent', $route.params.userId)
+      .catch(console.log);
 
-    // methods
+    const save_event = (arg: DateSelectArg) => {
+      for (const temp of $store.state.schedule.events) {
+        arg.view.calendar.addEvent(temp);
+      }
+    };
+
     // 일정 생성하기
     const handleDateSelect = (arg: DateSelectArg) => {
       const now = new Date();
@@ -106,7 +116,6 @@ export default defineComponent({
           }
         }
       }
-      // console.log(currentEvents);
     };
 
     // fullcalendar options
@@ -140,15 +149,10 @@ export default defineComponent({
       eventsSet: changeEvent, // 등록한 일정, 변경된 일정 check
     } as CalendarOptions;
 
-    // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
-    const $route = useRoute();
-    $store
-      .dispatch('calendar/addEvent', $route.params.userId)
-      .catch(console.log);
-
     return {
       calendarOptions,
       currentEvents,
+      save_event,
     };
   },
 });
@@ -173,6 +177,3 @@ export default defineComponent({
   margin: 0 auto;
 }
 </style>
-
-function onCreate(arg0: () => void) { throw new Error('Function not
-implemented.'); }

@@ -8,27 +8,35 @@ import {
 
 @Injectable()
 export class ScheduleService {
-  public async getScheduleList(email: string) {
-    const result = await getScheduleList(email);
+  public async getScheduleList(userId: string) {
+    const result = await getScheduleList(userId);
     return result;
   }
 
-  public async createSchedule(email: string, date: string) {
-    const result = await createSchedule(email, date);
+  public async createSchedule(
+    userId: string,
+    start: string,
+    end: string,
+    title: string,
+    allDay: boolean,
+  ) {
+    const result = await createSchedule(userId, title, start, end, allDay);
     return result;
   }
 
   public async updateSchedule(
-    email: string,
-    date: string,
-    update_date: string,
+    userId: string,
+    id: string,
+    start: string,
+    end: string,
+    allDay: boolean,
   ) {
-    const result = await updateSchedule(email, date, update_date);
+    const result = await updateSchedule(userId, id, start, end, allDay);
     return result;
   }
 
-  public async deleteSchedule(email: string, date: string) {
-    const result = await deleteSchedule(email, date);
+  public async deleteSchedule(userId: string, date: string) {
+    const result = await deleteSchedule(userId, date);
     return result;
   }
 }

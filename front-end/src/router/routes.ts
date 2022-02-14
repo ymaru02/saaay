@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/account/:targetId',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Account.vue') }],
+    children: [{ path: '', component: () => import('src/pages/Account.vue') }],
   },
 
   {

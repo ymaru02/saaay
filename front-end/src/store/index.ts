@@ -23,6 +23,7 @@ import { AccountStateInterface } from './module-account/state';
  */
 
 export interface StateInterface {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   accessToken: any;
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;

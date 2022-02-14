@@ -1,5 +1,5 @@
 import {
-  // Param,
+  Param,
   Body,
   Controller,
   Delete,
@@ -16,71 +16,71 @@ import { ScheduleService } from '../services/schedule.service';
 export class ScheduleController {
   res: any;
   constructor(private readonly scheduleService: ScheduleService) {}
-
-  @Get('/list')
+  @Get('/:userId')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
-  async getScheduleList(
-    // @Param('userId') userId: string,
-    @Body()
-    params: {
-      email: string;
-    },
-    @Res() res: Response,
-  ) {
-    const scheduleList = await this.scheduleService.getScheduleList(
-      params.email,
-    );
+  async getScheduleList(@Param('userId') userId: string, @Res() res: Response) {
+    const scheduleList = await this.scheduleService.getScheduleList(userId);
     res.status(HttpStatus.OK).json(scheduleList);
   }
 
-  @Post('create')
+  @Post('/:userId/create')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async createSchedule(
+    @Param('userId') userId: string,
     @Body()
     params: {
-      email: string;
-      date: string;
+      title: string;
+      start: string;
+      end: string;
+      allDay: boolean;
     },
     @Res() res: Response,
   ) {
     const schedule = await this.scheduleService.createSchedule(
-      params.email,
-      params.date,
+      userId,
+      params.title,
+      params.start,
+      params.end,
+      params.allDay,
     );
     res.status(HttpStatus.CREATED).json(schedule);
   }
 
-  @Put('update')
+  @Put('/:userId/update')
   // 일정 변경
   async updateSchedule(
+    @Param('userId') userId: string,
     @Body()
     params: {
-      email: string;
-      date: string;
-      update_date: string;
+      id: string;
+      start: string;
+      end: string;
+      allDay: boolean;
     },
     @Res() res: Response,
   ) {
     const schedule = await this.scheduleService.updateSchedule(
-      params.email,
-      params.date,
-      params.update_date,
+      userId,
+      params.id,
+      params.start,
+      params.end,
+      params.allDay,
     );
     res.status(HttpStatus.OK).json(schedule);
   }
 
-  @Delete('delete')
+  @Delete('/:userId/delete')
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async deleteSchedule(
+    @Param('userId') userId: string,
     @Body()
     params: {
-      email: string;
       date: string;
     },
     @Res() res: Response,
   ) {
     const schedule = await this.scheduleService.deleteSchedule(
-      params.email,
+      userId,
       params.date,
     );
     res.status(HttpStatus.OK).json(schedule);
