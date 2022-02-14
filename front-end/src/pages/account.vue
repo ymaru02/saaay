@@ -309,7 +309,6 @@ export default {
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
     const blockListId = computed(() => $store.state.account.blockListId);
-
     watch(targetId, () => {
       $store
         .dispatch('account/getOwner', route.params.targetId)

@@ -4,6 +4,7 @@
       <q-chat-message label="Sunday, 19th" />
 
       <q-chat-message
+        @click="message"
         name="me"
         avatar="https://cdn.quasar.dev/img/avatar4.jpg"
         :text="['hey, how are you?']"
@@ -23,27 +24,27 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 // import { useQuasar } from 'quasar';
+// import { useRoute } from 'vue-router';
+import { useStore } from 'src/store';
+// import { computed, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'PageIndex',
-  data() {
+  setup() {
+    const $store = useStore();
+    // 타겟 아이디 수정
+    const message = () => {
+      console.log($store.state.account.followers);
+    };
     return {
-      newMessage: '',
-      messages: [
-        {
-          text: '예시',
-          from: 'me',
-        },
-      ],
+      message,
     };
   },
-  methods: {
-    sendMessage() {
-      this.messages.push({
-        text: this.newMessage,
-        from: 'me',
-      });
-    },
+  created() {
+    const $store = useStore();
+    // 타겟 아이디 수정
+    $store.dispatch('account/getFollowerList', 1).catch(console.log);
+    $store.dispatch('account/getFollowingList', 1).catch(console.log);
   },
 });
 </script>

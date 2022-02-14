@@ -13,12 +13,17 @@
 
           <q-btn round flat>
             <q-avatar>
-              <img :src="currentConversation.avatar" />
+              <!-- 수정사항 -->
+              <img
+                src="images/blank-profile-picture.png"
+                alt="profile-image"
+                class="profile q-mb-sm"
+              />-->
             </q-avatar>
           </q-btn>
 
           <span class="q-subtitle-1 q-pl-md">
-            {{ currentConversation.person }}
+            {{ userName }}
           </span>
 
           <q-space />
@@ -63,7 +68,7 @@
       >
         <q-toolbar class="bg-grey-3">
           <q-avatar class="cursor-pointer">
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" />
+            <q-icon name="img:images/logo.png" size="50px" />
           </q-avatar>
 
           <q-space />
@@ -122,32 +127,37 @@
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>
             <q-item
-              v-for="(conversation, index) in conversations"
-              :key="conversation.id"
+              v-for="(follower, index) in follows"
+              :key="`follower-${index}`"
               clickable
               v-ripple
               @click="setCurrentConversation(index)"
             >
               <q-item-section avatar>
                 <q-avatar>
-                  <img :src="conversation.avatar" />
+                  <!-- 수정사항 -->
+                  <img
+                    src="images/blank-profile-picture.png"
+                    alt="profile-image"
+                    class="profile q-mb-sm"
+                  />
                 </q-avatar>
               </q-item-section>
 
               <q-item-section>
                 <q-item-label lines="1">
-                  {{ conversation.person }}
+                  {{ follower._fields[0].properties.username }}
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
-                  <q-icon name="check" v-if="conversation.sent" />
-                  <q-icon name="not_interested" v-if="conversation.deleted" />
-                  {{ conversation.caption }}
+                  <!-- <q-icon name="check" v-if="conversation.sent" /> -->
+                  <!-- <q-icon name="not_interested" v-if="conversation.deleted" /> -->
+                  <!-- {{ conversation.caption }} -->
                 </q-item-label>
               </q-item-section>
 
               <q-item-section side>
                 <q-item-label caption>
-                  {{ conversation.time }}
+                  <!-- {{ conversation.time }} -->
                 </q-item-label>
                 <q-icon name="keyboard_arrow_down" />
               </q-item-section>
@@ -190,6 +200,7 @@
 import { useQuasar } from 'quasar';
 import { ref, computed } from 'vue';
 import { defineComponent } from 'vue';
+import { useStore } from 'src/store';
 
 const conversations = [
   {
@@ -200,34 +211,72 @@ const conversations = [
     time: '15:00',
     sent: true,
   },
-  {
-    id: 2,
-    person: 'Dan Popescu',
-    avatar: 'https://cdn.quasar.dev/team/dan_popescu.jpg',
-    caption: "I'm working on Quasar!",
-    time: '16:00',
-    sent: true,
-  },
-  {
-    id: 3,
-    person: 'Jeff Galbraith',
-    avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
-    caption: "I'm working on Quasar!",
-    time: '18:00',
-    sent: true,
-  },
-  {
-    id: 4,
-    person: 'Allan Gaunt',
-    avatar: 'https://cdn.quasar.dev/team/allan_gaunt.png',
-    caption: "I'm working on Quasar!",
-    time: '17:00',
-    sent: true,
-  },
 ];
 
 export default defineComponent({
   name: 'WhatsappLayout',
+  setup() {
+    const $store = useStore();
+    const follows = computed(() =>
+      Object.assign(
+        {},
+        $store.state.account.followers,
+        $store.state.account.followings
+      )
+    );
+
+    const $q = useQuasar();
+
+    const leftDrawerOpen = ref(false);
+    const search = ref('');
+    const message = ref('');
+    const currentConversationIndex = ref(0);
+
+    const userName = ref('');
+    const currentConversation = computed(() => {
+      return Object.assign(
+        {},
+        $store.state.account.followers,
+        $store.state.account.followings
+      )[currentConversationIndex.value]._fields[0].properties.username;
+    });
+
+    const style = computed(() => ({
+      height: ''.concat($q.screen.height, 'px'),
+    }));
+
+    function toggleLeftDrawer() {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    }
+
+    // 수정사항
+    //  팔로우 팔로워 합친 데이터 가져오기
+    function setCurrentConversation(index) {
+      currentConversationIndex.value = index | 0;
+      userName.value = Object.assign(
+        {},
+        $store.state.account.followers,
+        $store.state.account.followings
+      )[currentConversationIndex.value]._fields[0].properties.username;
+    }
+
+    return {
+      follows,
+      userName,
+
+      leftDrawerOpen,
+      search,
+      message,
+      currentConversationIndex,
+      conversations,
+
+      currentConversation,
+      setCurrentConversation,
+      style,
+
+      toggleLeftDrawer,
+    };
+  },
   data() {
     return {
       newMessage: '',
@@ -246,44 +295,6 @@ export default defineComponent({
         from: 'me',
       });
     },
-  },
-  setup() {
-    const $q = useQuasar();
-
-    const leftDrawerOpen = ref(false);
-    const search = ref('');
-    const message = ref('');
-    const currentConversationIndex = ref(0);
-
-    const currentConversation = computed(() => {
-      return conversations[currentConversationIndex.value];
-    });
-
-    const style = computed(() => ({
-      height: ''.concat($q.screen.height, 'px'),
-    }));
-
-    function toggleLeftDrawer() {
-      leftDrawerOpen.value = !leftDrawerOpen.value;
-    }
-
-    function setCurrentConversation(index) {
-      currentConversationIndex.value = index | 1;
-    }
-
-    return {
-      leftDrawerOpen,
-      search,
-      message,
-      currentConversationIndex,
-      conversations,
-
-      currentConversation,
-      setCurrentConversation,
-      style,
-
-      toggleLeftDrawer,
-    };
   },
 });
 </script>

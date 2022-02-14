@@ -19,20 +19,6 @@ export default defineComponent({
   name: 'PageIndex',
   components: { ExampleComponent },
   setup() {
-    // const $q = useQuasar();
-
-    // // get status
-    // console.log($q.dark.isActive); // true, false
-
-    // // get configured status
-    // console.log($q.dark.mode); // "auto", true, false
-
-    // // set status
-    // $q.dark.set(true); // or false or "auto"
-
-    // // toggle
-    // $q.dark.toggle();
-
     const todos = ref<Todo[]>([
       {
         id: 1,
