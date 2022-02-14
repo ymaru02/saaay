@@ -10,6 +10,8 @@ import {
 // import { ExampleStateInterface } from './module-example/state';
 import account from './module-account';
 import { AccountStateInterface } from './module-account/state';
+import room from './module-room';
+import { RoomStateInterface } from './module-room/state';
 
 /*
  * If not building with SSR mode, you can
@@ -26,6 +28,7 @@ export interface StateInterface {
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   example: unknown;
   account: AccountStateInterface;
+  room: RoomStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -44,6 +47,7 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       // example
       account,
+      room,
     },
 
     // enable strict mode (adds overhead!)
