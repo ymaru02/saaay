@@ -71,19 +71,11 @@
             color="grey-8"
             icon="apps"
             v-if="$q.screen.gt.sm"
-            href="/#/main"
+            @click="showNotif()"
           >
             <q-tooltip>Apps</q-tooltip>
           </q-btn>
-          <q-btn
-            round
-            dense
-            flat
-            color="grey-8"
-            icon="message"
-            v-if="$q.screen.gt.sm"
-            href="/#/main"
-          >
+          <q-btn round dense flat color="grey-8" icon="message" href="/#/chat">
             <q-tooltip>Messages</q-tooltip>
           </q-btn>
           <q-btn
@@ -100,11 +92,35 @@
             <q-badge color="red" text-color="white" floating> 2 </q-badge>
             <q-tooltip>Notifications</q-tooltip>
           </q-btn>
+          <!-- 로그인시 수정 로그아웃시 수정 -->
           <q-btn round flat>
             <q-avatar size="26px">
               <img src="images/blank-profile-picture.png" />
             </q-avatar>
             <q-tooltip>Account</q-tooltip>
+            <q-menu auto-close>
+              <q-list dense>
+                <q-item class="GL__menu-link-signed-in">
+                  <q-item-section>
+                    <div>Signed in as <strong>UserName</strong></div>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your profile</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Help</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Settings</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Sign out</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-btn>
         </div>
       </q-toolbar>
@@ -206,16 +222,38 @@
 import { ref } from 'vue';
 import { fabYoutube } from '@quasar/extras/fontawesome-v5';
 import { defineComponent } from 'vue';
+import { useQuasar } from 'quasar';
+
+// import { Notify } from 'quasar';
+// import { watch } from 'vue';
+// 알림 기능
+// Notify.create('Danger, Will Robinson! Danger!');
+// // or with a config object:
+// Notify.create({
+//   message: 'Danger, Will Robinson! Danger!',
+// });
 
 export default defineComponent({
   name: 'MyLayout',
   setup() {
+    const $q = useQuasar();
     const leftDrawerOpen = ref(false);
     const search = ref('');
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
     }
+
     return {
+      // 알람 기능
+      showNotif() {
+        $q.notify({
+          position: 'bottom-right',
+          message: 'Jim pinged you.',
+          caption: '5 minutes ago',
+          color: 'secondary',
+        });
+      },
+
       fabYoutube,
       leftDrawerOpen,
       search,
@@ -268,8 +306,6 @@ export default defineComponent({
     min-width: 100px;
     width: 55%;
     border-radius: 50%;
-    input {
-    }
   }
   &__toolbar-input-btn {
     border-radius: 0;
@@ -286,6 +322,26 @@ export default defineComponent({
     font-size: 0.75rem;
     &:hover {
       color: #000;
+    }
+  }
+}
+
+.GL {
+  &__menu-link {
+    font-size: 12px;
+  }
+  &__menu-link:hover {
+    background: #555;
+    color: white;
+  }
+  &__menu-link-signed-in,
+  &__menu-link-status {
+    font-size: 12px;
+  }
+  &__menu-link-status {
+    color: $blue-grey-6;
+    &:hover {
+      color: $light-blue-9;
     }
   }
 }
