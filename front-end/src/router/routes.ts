@@ -15,9 +15,9 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/account',
-    component: () => import('src/layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/account.vue') }],
+    path: '/account/:targetId',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Account.vue') }],
   },
 
   {
