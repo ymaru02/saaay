@@ -12,10 +12,10 @@
             <div class="sub-menu">
               <ul class="menu">
                 <li>
-                  <a href="/signin">Sign In</a>
+                  <q-btn to="/signin">Sign In</q-btn>
                 </li>
                 <li>
-                  <a href="javascript:void(0)">My ProFile</a>
+                  <q-btn to="/profile">My Profile</q-btn>
                 </li>
                 <li>
                   <a href="javascript:void(0)">Null</a>
