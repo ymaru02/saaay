@@ -60,6 +60,7 @@
 <script>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { api } from 'src/boot/axios';
 
 export default {
   setup() {
@@ -81,18 +82,30 @@ export default {
       },
 
       onSubmit() {
-        $q.notify({
-          color: 'red-5',
-          textColor: 'white',
-          icon: 'warning',
-          message: 'You need to accept the license and terms first',
-        });
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Submitted',
-        });
+        const user = {
+          email: email.value,
+          password: password.value,
+        };
+        api
+          .post('/user/login', user)
+          .then((accessTocken) => {
+            console.log(accessTocken.data);
+          })
+          .catch(() => {
+            $q.notify({
+              color: 'red-5',
+              textColor: 'white',
+              icon: 'warning',
+              message: 'Check Your Email or Password',
+            });
+          });
+
+        // $q.notify({
+        //   color: 'green-4',
+        //   textColor: 'white',
+        //   icon: 'cloud_done',
+        //   message: 'Submitted',
+        // });
       },
     };
   },
