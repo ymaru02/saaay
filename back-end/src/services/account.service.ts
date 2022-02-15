@@ -19,7 +19,7 @@ export class AccountService {
     const result = await getOwner(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;
-      console.log(res._fields[0].properties);
+      // console.log(res._fields[0].properties);
     }
     return result;
   }
@@ -28,7 +28,7 @@ export class AccountService {
     const result = await getFollowerList(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;
-      console.log(res._fields[0].properties);
+      // console.log(res._fields[0].properties);
     }
     return result;
   }
@@ -42,7 +42,7 @@ export class AccountService {
     const result = await getFollowingList(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;
-      console.log(res._fields[0].properties);
+      // console.log(res._fields[0].properties);
     }
     return result;
   }
@@ -76,7 +76,7 @@ export class AccountService {
     const result = await getBlockList(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;
-      console.log(res._fields[0].properties);
+      // console.log(res._fields[0].properties);
     }
     return result;
   }
