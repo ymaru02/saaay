@@ -12,6 +12,8 @@ import { ScheduleStateInterface } from './schedule/state';
 // import { ExampleStateInterface } from './module-example/state';
 import account from './module-account';
 import { AccountStateInterface } from './module-account/state';
+import signin from './module-signin';
+import { SigninStateInterface } from './module-signin/state';
 
 /*
  * If not building with SSR mode, you can
@@ -31,6 +33,7 @@ export interface StateInterface {
   example: unknown;
   schedule: ScheduleStateInterface;
   account: AccountStateInterface;
+  signin: SigninStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -50,6 +53,7 @@ export default store(function (/* { ssrContext } */) {
       // example
       schedule,
       account,
+      signin,
     },
 
     // enable strict mode (adds overhead!)

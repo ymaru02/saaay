@@ -1,5 +1,4 @@
 import {
-  Param,
   Body,
   Controller,
   Delete,
@@ -8,36 +7,53 @@ import {
   Put,
   Post,
   Res,
+  UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ScheduleService } from '../services/schedule.service';
-
+import { AuthService } from 'src/auth/auth.service';
 @Controller('/schedule')
 export class ScheduleController {
   res: any;
-  constructor(private readonly scheduleService: ScheduleService) {}
-  @Get('/:userId')
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    private readonly authService: AuthService,
+  ) {}
+  @Get('')
+  @UseGuards(JwtAuthGuard)
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
-  async getScheduleList(@Param('userId') userId: string, @Res() res: Response) {
-    const scheduleList = await this.scheduleService.getScheduleList(userId);
+  async getScheduleList(
+    @Res() res: Response,
+    @Headers('Authorization') accessToken,
+  ) {
+    const payload = await this.authService.verifyUser(accessToken);
+    const scheduleList = await this.scheduleService.getScheduleList(
+      payload.email,
+    );
     res.status(HttpStatus.OK).json(scheduleList);
   }
 
-  @Post('/:userId/create')
+  @Post('/create')
+  @UseGuards(JwtAuthGuard)
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async createSchedule(
-    @Param('userId') userId: string,
     @Body()
     params: {
+      id: string;
       title: string;
       start: string;
       end: string;
       allDay: boolean;
     },
     @Res() res: Response,
+    @Headers('Authorization') accessToken,
   ) {
+    const payload = await this.authService.verifyUser(accessToken);
     const schedule = await this.scheduleService.createSchedule(
-      userId,
+      payload.email,
+      params.id,
       params.title,
       params.start,
       params.end,
@@ -46,22 +62,26 @@ export class ScheduleController {
     res.status(HttpStatus.CREATED).json(schedule);
   }
 
-  @Put('/:userId/update')
+  @Put('/update')
+  @UseGuards(JwtAuthGuard)
   // 일정 변경
   async updateSchedule(
-    @Param('userId') userId: string,
     @Body()
     params: {
       id: string;
+      title: string;
       start: string;
       end: string;
       allDay: boolean;
     },
     @Res() res: Response,
+    @Headers('Authorization') accessToken,
   ) {
+    const payload = await this.authService.verifyUser(accessToken);
     const schedule = await this.scheduleService.updateSchedule(
-      userId,
+      payload.email,
       params.id,
+      params.title,
       params.start,
       params.end,
       params.allDay,
@@ -69,19 +89,21 @@ export class ScheduleController {
     res.status(HttpStatus.OK).json(schedule);
   }
 
-  @Delete('/:userId/delete')
+  @Delete('/delete')
+  @UseGuards(JwtAuthGuard)
   // 방을 생성할 일정을 잡은 사람을 기준으로 일정을 가져온다.
   async deleteSchedule(
-    @Param('userId') userId: string,
     @Body()
     params: {
-      date: string;
+      id: string;
     },
     @Res() res: Response,
+    @Headers('Authorization') accessToken,
   ) {
+    const payload = await this.authService.verifyUser(accessToken);
     const schedule = await this.scheduleService.deleteSchedule(
-      userId,
-      params.date,
+      payload.email,
+      params.id,
     );
     res.status(HttpStatus.OK).json(schedule);
   }

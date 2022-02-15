@@ -1,14 +1,14 @@
 import { driver } from './connection-pools/neo4j.db';
 
 // user가 생성한 앞으로의 일정 가져오기(get)
-export async function getScheduleList(userId: string) {
+export async function getScheduleList(email: string) {
   const session = driver().session();
   let result;
   const dateList = [];
 
   try {
     result = await session.run(
-      `MATCH (a:User)-[r:CREATE_IN]->(b:Schedule) WHERE id(a) = ${userId} RETURN b`,
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule) RETURN b`,
     );
 
     for (const rec of result.records) {
@@ -26,7 +26,8 @@ export async function getScheduleList(userId: string) {
 
 // 일정 생성하기(post)
 export async function createSchedule(
-  userId: string,
+  email: string,
+  id: string,
   start: string,
   end: string,
   title: string,
@@ -36,11 +37,11 @@ export async function createSchedule(
 
   try {
     const create = await session.run(
-      `CREATE (n:Schedule{title:"${title}", start:"${start}", end:"${end}", allDay:"${allDay}"}) RETURN n`,
+      `CREATE (n:Schedule{title:"${title}", id:"${id}", start:"${start}", end:"${end}", allDay:"${allDay}"}) RETURN n`,
     );
 
     const make_rel = await session.run(
-      `MATCH (a:User), (b:Schedule{title:"${title}", start:"${start}", end:"${end}", allDay:"${allDay}"}) WHERE id(a) = ${userId} CREATE (a)-[r:CREATE_IN]->(b) RETURN a, r, b`,
+      `MATCH (a:User{email:"${email}"}), (b:Schedule{title:"${title}", id:"${id}", start:"${start}", end:"${end}", allDay:"${allDay}"}) CREATE (a)-[r:CREATE_IN]->(b) RETURN a, r, b`,
     );
   } finally {
     await session.close();
@@ -51,7 +52,7 @@ export async function createSchedule(
 
   const result = {
     message: 'Create Schedule',
-    userId: `${userId}`,
+    email: `${email}`,
     start: `${start}`,
     end: `${end}`,
   };
@@ -61,8 +62,9 @@ export async function createSchedule(
 
 // 일정 수정하기(put)
 export async function updateSchedule(
-  userId: string,
+  email: string,
   id: string,
+  title: string,
   start: string,
   end: string,
   allDay: boolean,
@@ -71,7 +73,7 @@ export async function updateSchedule(
   let update;
   try {
     update = await session.run(
-      `MATCH (a:User)-[r:CREATE_IN]->(b:Schedule) WHERE id(a) = ${userId} AND id(b) = ${id} SET b.start = "${start}", b.end = "${end}", b.allDay = "${allDay}" RETURN b`,
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule) WHERE id(b) = ${id} SET b.title = "${title}", b.start = "${start}", b.end = "${end}", b.allDay = "${allDay}" RETURN b`,
     );
   } finally {
     await session.close();
@@ -87,12 +89,12 @@ export async function updateSchedule(
 }
 
 // 일정 삭제하기(delete)
-export async function deleteSchedule(userId: string, date: string) {
+export async function deleteSchedule(email: string, id: string) {
   const session = driver().session();
 
   try {
     const del = await session.run(
-      `MATCH (a:User)-[r:CREATE_IN]->(b:Schedule{date:"${date}"}) WHERE id(a) = ${userId} DETACH DELETE b`,
+      `MATCH (a:User{email:"${email}"})-[r:CREATE_IN]->(b:Schedule) WHERE id(b) = ${id} DETACH DELETE b`,
     );
   } finally {
     await session.close();
@@ -101,6 +103,6 @@ export async function deleteSchedule(userId: string, date: string) {
   // on application exit:
   await driver().close();
 
-  const result = { message: 'Delete Schedule', user: `${userId}` };
+  const result = { message: 'Delete Schedule', user: `${email}` };
   return result;
 }

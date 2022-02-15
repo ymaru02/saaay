@@ -20,7 +20,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useStore } from 'src/store';
-import { useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
@@ -32,18 +31,12 @@ export default defineComponent({
     const $q = useQuasar();
     let currentEvents = [] as EventApi[];
     // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
-    const $route = useRoute();
-    $store
-      .dispatch('schedule/addEvent', $route.params.userId)
-      .catch(console.log);
 
-    const save_event = (arg: DateSelectArg) => {
-      for (const temp of $store.state.schedule.events) {
-        arg.view.calendar.addEvent(temp);
-      }
-    };
+    // $store
+    //   .dispatch('schedule/addEvent', $route.params.userId)
+    //   .catch(console.log);
 
-    // 일정 생성하기
+    // 일정 생성하기(임시저장)
     const handleDateSelect = (arg: DateSelectArg) => {
       const now = new Date();
       if (arg.start <= now) {
@@ -66,6 +59,7 @@ export default defineComponent({
         })
           .onOk((data) => {
             let calendarApi = arg.view.calendar;
+            console.log(arg);
             calendarApi.addEvent({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               title: data,
@@ -90,14 +84,13 @@ export default defineComponent({
         message: '일정을 삭제하시겠습니까?',
         cancel: true,
         persistent: true,
-      })
-        .onOk(() => {
-          arg.event.remove();
-          // db에서도 삭제할 수 있도록 함
-        })
-        .onCancel(() => {
-          // console.log('>>>> Cancel')
-        });
+      }).onOk(() => {
+        arg.event.remove();
+        // backend를 통해 db에 있는 일정도 삭제
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const deleteEvent = (arg: EventClickArg) =>
+          $store.dispatch('schedule/deleteEvent', arg.event.id);
+      });
     };
 
     // 등록되었을 배열에 추가, 일정이 바뀐 events들 확인 후 backend에 data 전달하고 배열에서 제거
@@ -106,12 +99,36 @@ export default defineComponent({
       if (currentEvents.length > 0) {
         console.log(currentEvents);
 
-        // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 backend data보내기
+        // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 create보내기
+        // all-day가 true인 경우 시간일정이 바뀌었다는 것이므로 update로 보내기
         for (let i = 0; i < currentEvents.length; i++) {
-          if (currentEvents[i].allDay === false) {
-            console.log(currentEvents[i].start);
-            // backend로 보내기
-
+          if (currentEvents[i].allDay === true && currentEvents[i].id === '') {
+            console.log(currentEvents[i]);
+            // create
+            const create_data = {
+              id: currentEvents[i]._instance?.instanceId,
+              title: currentEvents[i].title,
+              start: currentEvents[i].start,
+              end: currentEvents[i].end,
+              allDay: currentEvents[i].allDay,
+            };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const createEvent = () =>
+              $store.dispatch('schedule/createEvent', create_data);
+            currentEvents.splice(i);
+            console.log(currentEvents);
+          } else if (currentEvents[i].allDay === true) {
+            // update
+            const update_data = {
+              id: currentEvents[i].id,
+              title: currentEvents[i].title,
+              start: currentEvents[i].start,
+              end: currentEvents[i].end,
+              allDay: currentEvents[i].allDay,
+            };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const updateEvent = () =>
+              $store.dispatch('schedule/updateEvent', update_data);
             currentEvents.splice(i);
           }
         }
@@ -152,7 +169,6 @@ export default defineComponent({
     return {
       calendarOptions,
       currentEvents,
-      save_event,
     };
   },
 });
