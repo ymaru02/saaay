@@ -12,6 +12,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('src/pages/Index.vue') },
       { path: '/calendar', component: () => import('pages/Calendar.vue') },
+      { path: '/profile', component: () => import('pages/Profile.vue') },
+      { path: '/signin', component: () => import('pages/Signin.vue') },
     ],
   },
   {
@@ -28,9 +30,9 @@ const routes: RouteRecordRaw[] = [
 
   {
     name: 'Signin',
-    path: '/signin',
+    path: '/profile',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Signin.vue') }],
+    children: [{ path: '', component: () => import('pages/Profile.vue') }],
   },
 
   // Always leave this as last one,

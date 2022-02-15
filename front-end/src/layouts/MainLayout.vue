@@ -100,7 +100,13 @@
             <q-badge color="red" text-color="white" floating> 2 </q-badge>
             <q-tooltip>Notifications</q-tooltip>
           </q-btn>
-          <q-btn round flat>
+          <q-btn round flat to="profile">
+            <q-avatar size="26px">
+              <img src="images/blank-profile-picture.png" />
+            </q-avatar>
+            <q-tooltip>Account</q-tooltip>
+          </q-btn>
+          <q-btn round flat to="signin">
             <q-avatar size="26px">
               <img src="images/blank-profile-picture.png" />
             </q-avatar>

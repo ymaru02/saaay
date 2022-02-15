@@ -1,9 +1,14 @@
 import { MutationTree } from 'vuex';
 import { SigninStateInterface } from './state';
+import { User } from './user.model';
 
 const mutation: MutationTree<SigninStateInterface> = {
-  someMutation(/* state: ExampleStateInterface */) {
-    // your code
+  changeMessage(state, newMsg: string) {
+    state.message = newMsg;
+  },
+
+  authenticate(state, user: User) {
+    state.user = user;
   },
 };
 

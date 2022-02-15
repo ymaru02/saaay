@@ -59,23 +59,29 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Cookies, useQuasar } from 'quasar';
-import { api } from 'src/boot/axios';
-import { AxiosResponse } from 'axios';
+import { Cookies } from 'quasar';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
 
 export default {
-  created() {
-    const value = Cookies.get('access_token');
-    if (value) {
-      
+  async created() {
+    const $store = useStore();
+    const $router = useRouter();
+    const accessToken = Cookies.get('access_token');
+    if (accessToken) {
+      await $store
+        .dispatch('signin/loginByAccessToken', accessToken)
+        .catch(console.log);
+      console.log(accessToken);
+      await $router.push('profile');
     }
   },
   setup() {
     const email = ref(null);
     const password = ref(null);
-    const $q = useQuasar();
     const name = ref(null);
     const age = ref(null);
+    const $store = useStore();
 
     return {
       email,
@@ -88,33 +94,14 @@ export default {
         password.value = null;
       },
 
-      onSubmit() {
+      async onSubmit() {
         const user = {
           email: email.value,
           password: password.value,
         };
-        api
-          .post('/user/login', user)
-          .then((response: AxiosResponse<{ access_token: string }>) => {
-            Cookies.set('access_token', response.data.access_token, {
-              expires: '1d',
-            });
-          })
-          .catch(() => {
-            $q.notify({
-              color: 'red-5',
-              textColor: 'white',
-              icon: 'warning',
-              message: 'Check Your Email or Password',
-            });
-          });
-
-        // $q.notify({
-        //   color: 'green-4',
-        //   textColor: 'white',
-        //   icon: 'cloud_done',
-        //   message: 'Submitted',
-        // });
+        await $store.dispatch('signin/authenticate', user).catch(console.log);
+        console.log($store.state.signin.user.email);
+        console.log(Cookies.get('access_token'));
       },
     };
   },
