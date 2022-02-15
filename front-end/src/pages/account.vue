@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-8 offset-2">
         <div v-for="(own, index) in owner" :key="`onwer-${index}`">
-          <div class="row justify-center">
+          <div class="row q-mb-lg">
             <div class="col-1">
               <img
                 src="images/blank-profile-picture.png"
@@ -11,14 +11,21 @@
                 class="profile q-mb-sm"
               />
             </div>
-          </div>
-          <div class="flex justify-center">
-            <div class="offset-1 text-bold">
-              {{ own._fields[0].properties.username }}
+            <div class="column justify-center q-ml-lg">
+              <div class="text-bold">
+                {{ own._fields[0].properties.username }}
+              </div>
+              <div class="text-grey">
+                {{ own._fields[0].properties.email }}
+              </div>
+              <div class="text-grey">
+                <div>followers : {{ followers.length }}</div>
+                <div>
+                  followings :
+                  {{ followings.length }}
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="flex justify-center text-grey q-mb-md">
-            <div class="offset-1">@{{ own._fields[0].properties.email }}</div>
           </div>
         </div>
         <q-card>
