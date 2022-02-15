@@ -223,9 +223,9 @@ import { ref } from 'vue';
 import { fabYoutube } from '@quasar/extras/fontawesome-v5';
 import { defineComponent } from 'vue';
 import { useQuasar } from 'quasar';
+// import { watch } from 'vue';
 
 // import { Notify } from 'quasar';
-// import { watch } from 'vue';
 // 알림 기능
 // Notify.create('Danger, Will Robinson! Danger!');
 // // or with a config object:
@@ -242,17 +242,28 @@ export default defineComponent({
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
     }
+    // // 알람 기능
+    // watch(() => {
+    //   $q.notify({
+    //     position: 'bottom-right',
+    //     message: 'Jim pinged you.',
+    //     caption: '5 minutes ago',
+    //     color: 'secondary',
+    //   });
+    // });
 
+    // 수정사항
+    // 삭제
+    function showNotif() {
+      $q.notify({
+        position: 'bottom-right',
+        message: 'Jim pinged you.',
+        caption: '5 minutes ago',
+        color: 'secondary',
+      });
+    }
     return {
-      // 알람 기능
-      showNotif() {
-        $q.notify({
-          position: 'bottom-right',
-          message: 'Jim pinged you.',
-          caption: '5 minutes ago',
-          color: 'secondary',
-        });
-      },
+      showNotif,
 
       fabYoutube,
       leftDrawerOpen,
@@ -296,6 +307,9 @@ export default defineComponent({
         { text: 'Test new features' },
       ],
     };
+  },
+  created() {
+    console.log(this.$store);
   },
 });
 </script>

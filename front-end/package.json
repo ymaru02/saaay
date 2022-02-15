@@ -25,12 +25,12 @@
     "core-js": "^3.6.5",
     "gsap": "^3.9.1",
     "lodash": "^4.17.21",
+    "openvidu-browser": "^2.21.0-beta1",
     "quasar": "^2.0.0",
     "scrollmagic": "^2.0.8",
-    "swiper": "^8.0.3",
     "vue": "^3.0.0",
-    "vue-awesome-swiper": "^4.1.1",
     "vue-router": "4",
+    "vue-socket.io": "^3.0.10",
     "vuex": "^4.0.1"
   },
   "devDependencies": {

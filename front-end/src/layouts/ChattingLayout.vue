@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */ /*
+eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
+@typescript-eslint/no-unsafe-assignment */
 <template>
   <div class="WAL position-relative bg-grey-4" :style="style">
     <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
@@ -173,7 +176,7 @@
       <q-footer>
         <q-toolbar class="bg-grey-3 text-black row">
           <q-btn round flat icon="insert_emoticon" class="q-mr-sm" />
-          <q-form @submit="sendMessage" class="full-width">
+          <q-form class="full-width">
             <q-input
               rounded
               outlined
@@ -198,24 +201,24 @@
 
 <script>
 import { useQuasar } from 'quasar';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'src/store';
-
-const conversations = [
-  {
-    id: 1,
-    person: 'Razvan Stoenescu',
-    avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
-    caption: "I'm working on Quasar!",
-    time: '15:00',
-    sent: true,
-  },
-];
+import { OpenVidu } from 'openvidu-browser';
 
 export default defineComponent({
   name: 'WhatsappLayout',
   setup() {
+    let OV = ref();
+    let mainStreamManager = ref();
+    let publisher = ref();
+    let subscribers = ref();
+
+    let mySessionId = ref('SessionA');
+    let myUserName = ref(
+      'Participant' + String(Math.floor(Math.random() * 100))
+    );
+
     const $store = useStore();
     const follows = computed(() =>
       Object.assign(
@@ -245,21 +248,88 @@ export default defineComponent({
       height: ''.concat($q.screen.height, 'px'),
     }));
 
-    function toggleLeftDrawer() {
-      leftDrawerOpen.value = !leftDrawerOpen.value;
-    }
-
     // 수정사항
     //  팔로우 팔로워 합친 데이터 가져오기
     function setCurrentConversation(index) {
       currentConversationIndex.value = index | 0;
+
+      // --- Get an OpenVidu object ---
+      OV = new OpenVidu();
+
+      // --- Init a session ---
+      session = OV.value.initSession();
+
+      // --- Specify the actions when events take place in the session ---
+
+      // On every new Stream received...
+      session.on('streamCreated', ({ stream }) => {
+        const subscriber = session.subscribe(stream);
+        subscribers.value.push(subscriber);
+      });
+
+      // On every Stream destroyed...
+      session.on('streamDestroyed', ({ stream }) => {
+        const index = subscribers.value.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          subscribers.value.splice(index, 1);
+        }
+      });
+
+      // On every asynchronous exception...
+      session.on('exception', ({ exception }) => {
+        console.warn(exception);
+      });
+
+      // --- Connect to the session with a valid user token ---
+
+      // 'getToken' method is simulating what your server-side should do.
+      // 'token' parameter should be retrieved and returned by your own backend
+      getToken(mySessionId).then((token) => {
+        this.session
+          .connect(token, { clientData: myUserName })
+          .then(() => {
+            // --- Get your own camera stream with the desired properties ---
+
+            let publisher = OV.value.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: undefined, // The source of video. If undefined default webcam
+              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              resolution: '640x480', // The resolution of your video
+              frameRate: 30, // The frame rate of your video
+              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+              mirror: false, // Whether to mirror your local video or not
+            });
+
+            mainStreamManager = publisher;
+            publisher = publisher;
+
+            // --- Publish your stream ---
+
+            session.publish(publisher);
+          })
+          .catch((error) => {
+            console.log(
+              'There was an error connecting to the session:',
+              error.code,
+              error.message
+            );
+          });
+      });
+
+      // window.addEventListener('beforeunload', leaveSession);
+    }
+
+    function toggleLeftDrawer() {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    }
+    watch(currentConversationIndex, () => {
       userName.value = Object.assign(
         {},
         $store.state.account.followers,
         $store.state.account.followings
       )[currentConversationIndex.value]._fields[0].properties.username;
-    }
-
+    });
     return {
       follows,
       userName,
@@ -268,7 +338,6 @@ export default defineComponent({
       search,
       message,
       currentConversationIndex,
-      conversations,
 
       currentConversation,
       setCurrentConversation,
@@ -277,24 +346,11 @@ export default defineComponent({
       toggleLeftDrawer,
     };
   },
-  data() {
-    return {
-      newMessage: '',
-      messages: [
-        {
-          text: '예시',
-          from: 'me',
-        },
-      ],
-    };
-  },
-  methods: {
-    sendMessage() {
-      this.messages.push({
-        text: this.newMessage,
-        from: 'me',
-      });
-    },
+
+  created() {
+    const $store = useStore();
+    $store.dispatch('account/getFollowerList', 1).catch(console.log);
+    $store.dispatch('account/getFollowingList', 1).catch(console.log);
   },
 });
 </script>
