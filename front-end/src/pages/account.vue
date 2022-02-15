@@ -243,6 +243,7 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'src/store';
+import { Cookies } from 'quasar';
 
 export default {
   setup() {
@@ -254,15 +255,16 @@ export default {
 
     let myId: string;
     myId = '';
-    let accessToken: string;
-    accessToken = '';
-    const cookies = document.cookie.split('; ');
-    for (const cookie of cookies) {
-      const data = cookie.split('=');
-      if (data[0] === 'access_token') {
-        accessToken = data[1];
-      }
-    }
+    // let accessToken: string;
+    // accessToken = '';
+    // const cookies = document.cookie.split('; ');
+    // for (const cookie of cookies) {
+    //   const data = cookie.split('=');
+    //   if (data[0] === 'access_token') {
+    //     accessToken = data[1];
+    //   }
+    // }
+    const accessToken = Cookies.get('access_token');
     if (accessToken) {
       const base64Url = accessToken.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
