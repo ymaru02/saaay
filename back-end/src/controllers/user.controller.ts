@@ -30,7 +30,7 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get('/:userName')
+  @Get('/name/:userName')
   async searchUsername(
     @Param('userName') userName: string,
     @Res() res: Response,
@@ -92,7 +92,7 @@ export class UserController {
     }
   }
 
-  @Patch('/user/password')
+  @Patch('/password')
   @UseGuards(JwtAuthGuard)
   async editPassword(@Body() userDto: UserDto, @Res() res: Response) {
     console.log('edit password :', userDto);
@@ -104,11 +104,11 @@ export class UserController {
     }
   }
 
-  @Get('sample/verify')
+  @Get('/verify')
   async verify(@Headers('Authorization') accessToken, @Res() res: Response) {
     console.log(accessToken);
     const user = await this.authService.verifyUser(accessToken);
     console.log(user.email);
-    res.send();
+    if (user) res.status(HttpStatus.OK).json({ message: '' });
   }
 }
