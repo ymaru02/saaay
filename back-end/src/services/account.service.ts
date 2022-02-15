@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Record } from 'neo4j-driver';
 import {
   getFollowerList,
   getFollowingList,
@@ -23,7 +24,7 @@ export class AccountService {
     return result;
   }
 
-  public async getFollowerList(targetId: string) {
+  public async getFollowerList(targetId: string): Promise<Record> {
     const result = await getFollowerList(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;
@@ -37,7 +38,7 @@ export class AccountService {
     return result;
   }
 
-  public async getFollowingList(targetId: string) {
+  public async getFollowingList(targetId: string): Promise<Record> {
     const result = await getFollowingList(targetId);
     for (const res of result) {
       res._fields[0].properties['password'] = undefined;

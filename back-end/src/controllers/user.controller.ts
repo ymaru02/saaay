@@ -20,6 +20,7 @@ import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { ResourceError } from 'src/error/resource.error';
 import { UserDto } from 'src/models/user.dto';
 import { UserService } from 'src/services/user.service';
+import { AccountService } from '../services/account.service';
 
 // TODO : https://docs.nestjs.com/controllers https://wikidocs.net/148192
 
@@ -28,6 +29,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly accountService: AccountService,
   ) {}
 
   @Get('/name/:userName')
@@ -49,6 +51,12 @@ export class UserController {
   async searchEmail(@Body() params: { email: string }, @Res() res: Response) {
     try {
       const userDto = await this.userService.findUserByEmail(params.email);
+      userDto.follower = await (
+        await this.accountService.getFollowerList(userDto.id)
+      ).map((r) => r.get('target').properties);
+      userDto.following = await (
+        await this.accountService.getFollowingList(userDto.id)
+      ).map((r) => r.get('target').properties);
       res.status(HttpStatus.OK).json(userDto);
     } catch (err) {
       console.log(err);
