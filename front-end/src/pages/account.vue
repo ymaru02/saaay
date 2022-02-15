@@ -4,20 +4,20 @@
       <div class="col-8 offset-2">
         <div v-for="(own, index) in owner" :key="`onwer-${index}`">
           <div class="row">
-            <div class="col-2">
+            <div class="col-xl-2 col-lg-3 col-md-4">
               <img
                 src="images/blank-profile-picture.png"
                 alt="profile-image"
                 class="profile q-mb-sm q-px-xl"
               />
             </div>
-            <div class="col-1 column justify-center">
+            <div class="col-xl-1 col-lg-2 col-md-3 column justify-center">
               <div class="column items-center">
                 <div class="text-bold text-h5">{{ myFollower.length }}</div>
                 <div class="text-grey">followers</div>
               </div>
             </div>
-            <div class="col-1 column justify-center">
+            <div class="col-xl-1 col-lg-2 col-md-3 column justify-center">
               <div class="column items-center">
                 <div class="text-bold text-h5">{{ myFollowing.length }}</div>
                 <div class="text-grey">followings</div>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="row q-mb-lg">
-            <div class="col-2 column items-center">
+            <div class="col-xl-2 col-lg-3 col-md-4 column items-center">
               <div class="text-bold">
                 {{ own._fields[0].properties.username }}
               </div>
@@ -33,7 +33,7 @@
                 {{ own._fields[0].properties.email }}
               </div>
             </div>
-            <div class="col-2 column justify-center">
+            <div class="col-xl-2 col-lg-4 col-md-6 column justify-center">
               <q-btn
                 v-if="
                   myId &&
