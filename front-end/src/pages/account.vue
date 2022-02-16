@@ -335,7 +335,7 @@ export default {
     //     accessToken = data[1];
     //   }
     // }
-    const accessToken = Cookies.get("access_token");
+    const accessToken = "Bearer " + Cookies.get("access_token");
     if (accessToken) {
       const base64Url = accessToken.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
