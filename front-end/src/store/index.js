@@ -9,6 +9,7 @@ import {
 import account from "./module-account";
 import room from "./module-room";
 import main from "./module-main";
+import schedule from "./module-schedule";
 import signin from "./module-signin";
 
 /*
@@ -47,6 +48,7 @@ export default store(function (/* { ssrContext } */) {
       account,
       room,
       main,
+      schedule,
       signin,
     },
 

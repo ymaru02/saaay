@@ -1,6 +1,6 @@
 export default function () {
   return {
-    myName: "",
-    chatData: [],
+    prop: false,
+    events: [],
   };
 }

@@ -19,7 +19,6 @@ export function myFollowing(state, data) {
 
 export function getFollowerList(state, data) {
   state.followers = data;
-  console.log(data);
 }
 
 export function getFollowingList(state, data) {

@@ -44,6 +44,8 @@
           @click="leaveSession"
           value="Leave session"
         />
+        <button @click="videoToggle">Video</button>
+        <button @click="audioToggle">Audio</button>
       </div>
       <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager" />
@@ -88,6 +90,8 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      isVideo: true,
+      isAudio: true,
 
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
@@ -96,7 +100,6 @@ export default {
 
   methods: {
     joinSession() {
-      console.log(OPENVIDU_SERVER_URL);
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -123,12 +126,12 @@ export default {
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
       });
-
       // --- Connect to the session with a valid user token ---
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.mySessionId).then((token) => {
+        console.log(token);
         this.session
           .connect(token, { clientData: this.myUserName })
           .then(() => {
@@ -182,6 +185,18 @@ export default {
       this.mainStreamManager = stream;
     },
 
+    videoToggle() {
+      this.isVideo = !this.isVideo;
+      this.publisher.publishVideo(this.isVideo);
+      // this.subscriber.subscribeToVideo(this.isVideo);
+    },
+
+    audioToggle() {
+      this.isAudio = !this.isAudio;
+      this.publisher.publishAudio(this.isAudio);
+      // this.subscriber.subscribeToAudio(this.isAudio);
+    },
+
     /**
      * --------------------------
      * SERVER-SIDE RESPONSIBILITY
@@ -203,6 +218,8 @@ export default {
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-session
     createSession(sessionId) {
       return new Promise((resolve, reject) => {
+        console.log(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`);
+
         axios
           .post(
             `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
