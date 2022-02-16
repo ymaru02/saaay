@@ -96,6 +96,7 @@ export default {
 
   methods: {
     joinSession() {
+      console.log(OPENVIDU_SERVER_URL);
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 

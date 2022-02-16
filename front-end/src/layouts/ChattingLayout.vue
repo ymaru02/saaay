@@ -196,6 +196,9 @@ import { useQuasar } from "quasar";
 import { ref, computed, watch } from "vue";
 import { useStore } from "src/store";
 
+const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+
 export default {
   name: "WhatsappLayout",
 
@@ -239,15 +242,27 @@ export default {
 
     function setCurrentConversation(index) {
       currentConversationIndex.value = index;
-      console.log(index);
     }
+
     watch(currentConversationIndex, () => {
       userName.value = Object.assign(
         {},
         $store.state.account.followers,
         $store.state.account.followings
       )[currentConversationIndex.value]._fields[0].properties.username;
+
+      // let sessionName;
+      // if (userName.value > )
+      console.log(OPENVIDU_SERVER_URL);
+      $store.commit("main/initData", {
+        OPENVIDU_SERVER_URL,
+        OPENVIDU_SERVER_SECRET,
+        userName,
+        userName,
+      });
+      $store.commit("main/joinSession");
     });
+
     return {
       userName,
       follows,
