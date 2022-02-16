@@ -1,79 +1,68 @@
 <template>
   <div class="app">
     <div class="app-main">
-      <FullCalendar class="app-calendar" :options="calendarOptions" events: all_events,>
+      <FullCalendar class="app-calendar" :options="calendarOptions">
       </FullCalendar>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import '@fullcalendar/core/vdom'; // solve problem with Vite
-import FullCalendar, {
-  CalendarOptions,
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-} from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { useStore } from 'src/store';
-import { Cookies, useQuasar } from 'quasar';
-import { api } from 'src/boot/axios';
-import { AxiosResponse } from 'axios';
+<script>
+import { computed } from "vue";
+import "@fullcalendar/core/vdom"; // solve problem with Vite
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { useStore } from "src/store";
+import { Cookies, useQuasar } from "quasar";
+import { api } from "src/boot/axios";
 
-interface save_event {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  allDay: boolean;
-}
-
-export default defineComponent({
+export default {
   components: {
     FullCalendar,
   },
   setup() {
     const $store = useStore();
     const $q = useQuasar();
-    const accessToken: string = Cookies.get('access_token');
-    let currentEvents = [] as EventApi[];
-    // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
-    // $store.dispatch('schedule/getEvent').catch(console.log);
-    let all_events: Array<object> = [];
-    void api
-      .get('/schedule', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response: AxiosResponse) => {
-        console.log(response.data);
-        const events = response.data as save_event[];
-        for (const temp of events) {
-          all_events.push(temp);
-        }
-      });
-    // 일정 생성하기(임시저장)
-    const handleDateSelect = (arg: DateSelectArg) => {
+    // const accessToken = Cookies.get("access_token");
+    let currentEvents = [];
+    // // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
+    $store.dispatch("schedule/getEvent").catch(console.log);
+    const all_events = computed(
+      () => (currentEvents = $store.state.schedule.events)
+    );
+    // // let all_events = [];
+    // // void api
+    // //   .get('/schedule', {
+    // //     headers: {
+    // //       Authorization: `Bearer ${accessToken}`,
+    // //     },
+    // //   })
+    // //   .then((response: AxiosResponse) => {
+    // //     console.log(response.data);
+    // //     const events = response.data as save_event[];
+    // //     all_events = events;
+    // //     console.log(all_events);
+    // //   });
+
+    // // 일정 생성하기(임시저장)
+    const handleDateSelect = (arg) => {
       const now = new Date();
       if (arg.start <= now) {
         $q.dialog({
-          title: '지난 시간입니다.',
-          message: '당일 일정은 Day에서 이용해주세요!',
+          title: "지난 시간입니다.",
+          message: "당일 일정은 Day에서 이용해주세요!",
         }).onCancel(() => {
           // console.log('>>>> Cancel')
         });
       } else {
         $q.dialog({
-          title: '일정 관리',
-          message: '시간 설정은 Day에서 이용해주세요',
+          title: "일정 관리",
+          message: "시간 설정은 Day에서 이용해주세요",
           prompt: {
-            model: '',
-            type: 'text', // optional
+            model: "",
+            type: "text", // optional
           },
           cancel: true,
           persistent: true,
@@ -81,7 +70,6 @@ export default defineComponent({
           .onOk((data) => {
             let calendarApi = arg.view.calendar;
             calendarApi.addEvent({
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               title: data,
               start: arg.start,
               end: arg.end,
@@ -98,67 +86,66 @@ export default defineComponent({
       }
     };
 
-    // 일정 삭제하기
-    const handleEventClick = (arg: EventClickArg) => {
+    // // 일정 삭제하기
+    const handleEventClick = (arg) => {
       // console.log(arg.event);
       $q.dialog({
-        title: 'Delete Schedule',
-        message: '일정을 삭제하시겠습니까?',
+        title: "Delete Schedule",
+        message: "일정을 삭제하시겠습니까?",
         cancel: true,
         persistent: true,
       }).onOk(() => {
         arg.event.remove();
 
         // backend를 통해 db에 있는 일정도 삭제
-        void $store.dispatch('schedule/deleteEvent', arg.event.id);
+        void $store.dispatch("schedule/deleteEvent", arg.event.id);
         arg.event.remove();
       });
     };
 
-    // 등록되었을 배열에 추가, 일정이 바뀐 events들 확인 후 backend에 data 전달하고 배열에서 제거
-    const changeEvent = (events: EventApi[]) => {
+    // // 등록되었을 배열에 추가, 일정이 바뀐 events들 확인 후 backend에 data 전달하고 배열에서 제거
+    const changeEvent = (events) => {
       currentEvents = events;
       if (currentEvents.length > 0) {
         // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 create보내기
         // all-day가 true인 경우 시간일정이 바뀌었다는 것이므로 update로 보내기
         for (let i = 0; i < currentEvents.length; i++) {
           // console.log(currentEvents[i]);
-          if (currentEvents[i].allDay === false && currentEvents[i].id === '') {
+          if (currentEvents[i].allDay === false && currentEvents[i].id === "") {
             // create
             const create_data = {
-              id: '',
+              id: "",
               title: currentEvents[i].title,
-              start: currentEvents[i].start?.toLocaleString(),
-              end: currentEvents[i].end?.toLocaleString(),
+              start: currentEvents[i].start,
+              end: currentEvents[i].end,
               allDay: currentEvents[i].allDay,
             };
             currentEvents.splice(i);
             void api
-              .post('/schedule/create', create_data, {
+              .post("/schedule/create", create_data, {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
                 },
               })
-              .then((response: AxiosResponse) => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                all_events.push(response.data);
+              .then((response) => {
+                currentEvents.push(response.data);
                 console.log(events);
               })
               .catch((err) => {
                 console.log(err);
               });
-            // currentEvents.splice(i);
+            currentEvents.splice(i);
           } else if (currentEvents[i].start !== currentEvents[i].end) {
             // update
             const update_data = {
               id: currentEvents[i].id,
               title: currentEvents[i].title,
-              start: currentEvents[i].start?.toLocaleString(),
-              end: currentEvents[i].end?.toLocaleString(),
+              start: currentEvents[i].start,
+              end: currentEvents[i].end,
               allDay: currentEvents[i].allDay,
             };
             console.log(update_data);
-            void $store.dispatch('schedule/updateEvent', update_data);
+            void $store.dispatch("schedule/updateEvent", update_data);
             currentEvents.splice(i);
           }
         }
@@ -174,16 +161,16 @@ export default defineComponent({
         interactionPlugin, // needed for dateClick
       ],
       headerToolbar: {
-        left: 'prev,next today', // 이전, 다음, 오늘로 이동하는 버튼
-        center: 'title', // 월-연도 표시
-        right: 'dayGridMonth timeGridDay', // 월, 주, 일 frame
+        left: "prev,next today", // 이전, 다음, 오늘로 이동하는 버튼
+        center: "title", // 월-연도 표시
+        right: "dayGridMonth timeGridDay", // 월, 주, 일 frame
       },
       buttonText: {
-        today: 'Today',
-        month: 'Month',
-        day: 'Day',
+        today: "Today",
+        month: "Month",
+        day: "Day",
       },
-      initialView: 'dayGridMonth', // 첫 화면 default 값이 오늘 날짜
+      initialView: "dayGridMonth", // 첫 화면 default 값이 오늘 날짜
       displayEventEnd: true,
       duration: { hours: 1 },
       forceEventDuration: true,
@@ -195,18 +182,37 @@ export default defineComponent({
       dayMaxEvents: true, // event 갯수가 많아서 칸 초과했을 때 +개수로 표기
       nowIndicator: true, // 현재 시간 마크
       navLinks: true, // 날짜를 선택하면 Day 캘린더나 Week 캘린더로 링크
+      events: currentEvents,
+      // [
+      //   {
+      //     id: 1,
+
+      //     title: 'Test1',
+
+      //     start: '2022-02-17T04:30:00.000Z',
+      //     end: '2022-02-17T05:30:00.000Z',
+      //   },
+
+      //   {
+      //     id: 2,
+
+      //     title: 'Test2',
+
+      //     start: '2022-02-18T07:00:00.000Z',
+
+      //     end: '2022-02-18T07:00:00.000Z',
+      //   },
+      // ],
       select: handleDateSelect, // 날짜 선택 후 event 등록
       eventClick: handleEventClick,
       eventsSet: changeEvent, // 등록한 일정, 변경된 일정 check
-    } as CalendarOptions;
-
+    };
     return {
       calendarOptions,
-      currentEvents,
-      all_events,
+      // currentEvents,
     };
   },
-});
+};
 </script>
 
 <style lang="css">

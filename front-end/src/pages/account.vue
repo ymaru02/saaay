@@ -239,109 +239,90 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'src/store';
-import { Cookies } from 'quasar';
+<script>
+import { computed, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "src/store";
+import { Cookies } from "quasar";
 
 export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
     const $store = useStore();
-    // let targetId = route.params.targetId;
-    const targetId = computed(() => route.params.targetId);
 
-    let myId: string;
-    myId = '';
-    // let accessToken: string;
-    // accessToken = '';
-    // const cookies = document.cookie.split('; ');
-    // for (const cookie of cookies) {
-    //   const data = cookie.split('=');
-    //   if (data[0] === 'access_token') {
-    //     accessToken = data[1];
-    //   }
-    // }
-    const accessToken = Cookies.get('access_token');
+    const targetId = computed(() => route.params.targetId);
+    let myId;
+    myId = "";
+
+    const accessToken = Cookies.get("access_token");
     if (accessToken) {
-      const base64Url = accessToken.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const base64Url = accessToken.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const jsonPayload = decodeURIComponent(
         atob(base64)
-          .split('')
+          .split("")
           .map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
           })
-          .join('')
+          .join("")
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const data: { id: string } = JSON.parse(jsonPayload);
+      const data = JSON.parse(jsonPayload);
       myId = data.id;
     }
 
     if (myId) {
-      $store.dispatch('account/myFollower', myId).catch(console.log);
-      $store.dispatch('account/myFollowing', myId).catch(console.log);
+      $store.dispatch("account/myFollower", myId).catch(console.log);
+      $store.dispatch("account/myFollowing", myId).catch(console.log);
+      console.log("a");
     }
+
     $store
-      .dispatch('account/getOwner', route.params.targetId)
+      .dispatch("account/getOwner", route.params.targetId)
       .catch(console.log);
     $store
-      .dispatch('account/getFollowerList', route.params.targetId)
+      .dispatch("account/getFollowerList", route.params.targetId)
       .catch(console.log);
     $store
-      .dispatch('account/getFollowingList', route.params.targetId)
+      .dispatch("account/getFollowingList", route.params.targetId)
       .catch(console.log);
 
-    if (+targetId.value === +myId) {
+    if (targetId.value === myId) {
       $store
-        .dispatch('account/getBlockList', {
+        .dispatch("account/getBlockList", {
           targetId: route.params.targetId,
           accessToken,
         })
         .catch(console.log);
     }
 
-    // onUpdated(() => {
-    //   // targetId = route.params.targetId;
-    //   // $store
-    //   //   .dispatch('account/getOwner', route.params.targetId)
-    //   //   .catch(console.log);
-    //   $store
-    //     .dispatch('account/getFollowerList', route.params.targetId)
-    //     .catch(console.log);
-    //   $store
-    //     .dispatch('account/getFollowingList', route.params.targetId)
-    //     .catch(console.log);
-    //   $store
-    //     .dispatch('account/getBlockList', route.params.targetId)
-    //     .catch(console.log);
-    //   // console.log('aa');
-    // });
-
-    const addMyFollowingList = (targetId: string) =>
-      $store.dispatch('account/addMyFollowingList', { targetId, accessToken });
-
-    const deleteMyFollowingList = (targetId: string) =>
-      $store.dispatch('account/deleteMyFollowingList', {
+    const addMyFollowingList = (targetId) =>
+      $store.dispatch("account/addMyFollowingList", {
         targetId,
         accessToken,
       });
 
-    const addMyBlockList = (targetId: string) =>
-      $store.dispatch('account/addMyBlockList', { targetId, accessToken });
+    const deleteMyFollowingList = (targetId) =>
+      $store.dispatch("account/deleteMyFollowingList", {
+        targetId,
+        accessToken,
+      });
 
-    const deleteMyBlockList = (targetId: string) =>
-      $store.dispatch('account/deleteMyBlockList', { targetId, accessToken });
+    const addMyBlockList = (targetId) =>
+      $store.dispatch("account/addMyBlockList", { targetId, accessToken });
 
-    const newFollowers = async (newId: string) => {
+    const deleteMyBlockList = (targetId) =>
+      $store.dispatch("account/deleteMyBlockList", {
+        targetId,
+        accessToken,
+      });
+
+    const newFollowers = async (newId) => {
       await router.push(`${newId}`);
     };
 
-    const newFollowings = async (newId: string) => {
+    const newFollowings = async (newId) => {
       await router.push(`${newId}`);
     };
 
@@ -356,17 +337,17 @@ export default {
 
     watch(targetId, () => {
       $store
-        .dispatch('account/getOwner', route.params.targetId)
+        .dispatch("account/getOwner", route.params.targetId)
         .catch(console.log);
       $store
-        .dispatch('account/getFollowerList', route.params.targetId)
+        .dispatch("account/getFollowerList", route.params.targetId)
         .catch(console.log);
       $store
-        .dispatch('account/getFollowingList', route.params.targetId)
+        .dispatch("account/getFollowingList", route.params.targetId)
         .catch(console.log);
       if (+targetId.value === +myId) {
         $store
-          .dispatch('account/getBlockList', {
+          .dispatch("account/getBlockList", {
             targetId: route.params.targetId,
             accessToken,
           })
@@ -375,7 +356,7 @@ export default {
     });
 
     return {
-      tab: ref('followers'),
+      tab: ref("followers"),
       owner,
       myId,
       targetId,

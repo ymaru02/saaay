@@ -54,10 +54,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'src/store';
+<script>
+import { computed } from "vue";
+// import { computed, ref, watch } from 'vue';
+// import { useRoute, useRouter } from 'vue-router';
+import { useStore } from "src/store";
 
 export default {
   setup() {
@@ -65,9 +66,9 @@ export default {
     // const router = useRouter();
     const $store = useStore();
 
-    $store.dispatch('room/getRoomList').catch(console.log);
+    $store.dispatch("room/getRoomList").catch(console.log);
 
-    const loadRoomList = () => $store.dispatch('room/getRoomList');
+    const loadRoomList = () => $store.dispatch("room/getRoomList");
 
     const rooms = computed(() => $store.state.room.rooms);
 
