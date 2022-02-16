@@ -68,7 +68,7 @@
               />
             </div>
             <div class="col-3">
-              <q-btn color="warning" icon="cancel" label="Return" to="main" />
+              <q-btn color="warning" icon="cancel" label="Return" to="/main" />
             </div>
           </div>
         </q-card>
@@ -79,25 +79,34 @@
 
 <script>
 import { useStore } from "src/store";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
+  updated() {
+    console.log("updated");
+  },
   setup() {
     const $store = useStore();
     const route = useRoute();
-    const userId = route.params.userId;
-    console.log(userId);
-    $store.dispatch("user/getUserById", userId);
+    const userId = computed(() => route.params.userId);
+    $store.dispatch("user/getUserById", userId.value).catch(console.log);
 
-    let user = {
-      username: "test",
-      email: "test email",
-      biography: "bio",
-      follower: [],
-      following: [],
-    };
+    const user = computed(() => $store.state.user.user);
+    // let user = {
+    //   username: "test",
+    //   email: "test email",
+    //   biography: "bio",
+    //   follower: [],
+    //   following: [],
+    // };
     // let user = ref({ ...$store.state.signin.user });
+
+    watch(userId, () => {
+      $store
+        .dispatch("user/getUserById", route.params.userId)
+        .catch(console.log);
+    });
 
     return {
       user,
