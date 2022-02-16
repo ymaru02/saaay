@@ -27,11 +27,14 @@ export default {
     const $store = useStore();
     const $q = useQuasar();
     const accessToken = Cookies.get("access_token");
+    let currentEvents = [];
+
     // // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
     $store.dispatch("schedule/getEvent").catch(console.log);
-    let currentEvents = $store.state.schedule.events;
+    // let start_data = $store.state.schedule.events;
+    // console.log("1qaz", start_data);
 
-    // // 일정 생성하기(임시저장)
+    // // 일정 생성하기
     const handleDateSelect = (arg) => {
       const now = new Date();
       if (arg.start <= now) {
@@ -60,7 +63,17 @@ export default {
               end: arg.end,
               allDay: arg.allDay,
             });
-            // console.log(arg);
+            // create
+            const create_data = {
+              id: "",
+              title: data,
+              start: arg.start,
+              end: arg.end,
+              allDay: arg.allDay,
+            };
+            $store
+              .dispatch("schedule/createEvent", create_data)
+              .catch(console.log);
           })
           .onCancel(() => {})
           .onDismiss(() => {});
@@ -76,60 +89,36 @@ export default {
         cancel: true,
         persistent: true,
       }).onOk(() => {
-        arg.event.remove();
-
         // backend를 통해 db에 있는 일정도 삭제
-        void $store.dispatch("schedule/deleteEvent", arg.event.id);
+        const delete_data = {
+          title: arg.event.title,
+          start: arg.event.start,
+          end: arg.event.end,
+          allDay: arg.event.allDay,
+        };
+        console.log(arg.event.title, arg.event.start);
+        $store.dispatch("schedule/deleteEvent", delete_data);
         arg.event.remove();
       });
     };
 
-    // // 등록되었을 배열에 추가, 일정이 바뀐 events들 확인 후 backend에 data 전달하고 배열에서 제거
+    // 등록되었을 배열에 추가, 일정이 바뀐 events들 확인 후 backend에 data 전달하고 배열에서 제거
     const changeEvent = (events) => {
-      // console.log(events);
       currentEvents = events;
-      if (currentEvents.length > 0) {
-        // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 create보내기
+      if (currentEvents.length === 1) {
         // all-day가 true인 경우 시간일정이 바뀌었다는 것이므로 update로 보내기
         for (let i = 0; i < currentEvents.length; i++) {
-          // console.log(currentEvents[i]);
-          if (currentEvents[i].allDay === false && currentEvents[i].id === "") {
-            // create
-            const create_data = {
-              id: "",
-              title: currentEvents[i].title,
-              start: currentEvents[i].start,
-              end: currentEvents[i].end,
-              allDay: currentEvents[i].allDay,
-            };
-            void api
-              .post("/schedule/create", create_data, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-              })
-              .then((response) => {})
-              .catch((err) => {
-                console.log(err);
-              });
-          } else if (
-            currentEvents[i].allDay === false &&
-            currentEvents[i].start !== currentEvents[i].end
-          ) {
-            // update
-            const update_data = {
-              id: currentEvents[i].id,
-              title: currentEvents[i].title,
-              start: currentEvents[i].start,
-              end: currentEvents[i].end,
-              allDay: currentEvents[i].allDay,
-            };
-            void $store.dispatch("schedule/updateEvent", update_data);
-          }
+          const update_data = {
+            title: currentEvents[i].title,
+            start: currentEvents[i].start,
+            end: currentEvents[i].end,
+            allDay: currentEvents[i].allDay,
+          };
+          $store.dispatch("schedule/updateEvent", update_data);
         }
       }
+      currentEvents = [];
     };
-
     // fullcalendar options
     const calendarOptions = {
       plugins: [
@@ -160,7 +149,26 @@ export default {
       nowIndicator: true, // 현재 시간 마크
       navLinks: true, // 날짜를 선택하면 Day 캘린더나 Week 캘린더로 링크
       events: $store.state.schedule.events,
+      //   [
+      //     {
+      //       id: 1,
 
+      //       title: "Test1",
+
+      //       start: "2022-02-17T04:30:00.000Z",
+      //       end: "2022-02-17T05:30:00.000Z",
+      //     },
+
+      //     {
+      //       id: 2,
+
+      //       title: "Test2",
+
+      //       start: "2022-02-18T07:00:00.000Z",
+
+      //       end: "2022-02-18T07:00:00.000Z",
+      //     },
+      //   ],
       select: handleDateSelect, // 날짜 선택 후 event 등록
       eventClick: handleEventClick,
       eventsSet: changeEvent, // 등록한 일정, 변경된 일정 check
@@ -168,8 +176,6 @@ export default {
 
     return {
       calendarOptions,
-      // all_events,
-      currentEvents,
     };
   },
 };
