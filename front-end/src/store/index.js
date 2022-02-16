@@ -9,7 +9,7 @@ import {
 import account from "./module-account";
 import schedule from "./module-schedule";
 // import room from "./module-room";
-// import signin from "./module-signin";
+import signin from "./module-signin";
 
 /*
  * If not building with SSR mode, you can
@@ -47,7 +47,7 @@ export default store(function (/* { ssrContext } */) {
       account,
       schedule,
       // room,
-      // signin,
+      signin,
     },
 
     // enable strict mode (adds overhead!)
