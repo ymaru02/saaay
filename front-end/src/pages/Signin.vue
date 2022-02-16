@@ -62,6 +62,8 @@ import { ref } from "vue";
 import { Cookies, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { AxiosResponse } from "axios";
+import { useStore } from "vuex";
+import { useRouter } from 'vue-router';
 
 export default {
   created() {
@@ -75,6 +77,8 @@ export default {
     const name = ref(null);
     const age = ref(null);
     const $store = useStore();
+    const $q = useQuasar();
+    const router = useRouter();
 
     return {
       email,
@@ -94,10 +98,11 @@ export default {
         };
         api
           .post("/user/login", user)
-          .then((responsive) => {
+          .then((response) => {
             Cookies.set("access_token", response.data.access_token, {
               expires: "1d",
             });
+            router.push("main");
           })
           .catch(() => {
             $q.notify({

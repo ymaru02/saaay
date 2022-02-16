@@ -73,21 +73,29 @@
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
     </div>
   </q-form>
+  <vue-base-input></vue-base-input>
 </template>
 
 <script>
-import { useStore } from 'src/store';
-import { ref } from 'vue';
+import { useStore } from "src/store";
+import { ref } from "vue";
 
 export default {
   setup() {
     const $store = useStore();
-    let user = ref($store.state.signin.user);
+    // let user = ref($store.state.signin.user);
+    let user = {
+      username: "name",
+      email: "test@sample.com",
+      biography: "bio",
+      follower: [],
+      following: [],
+    };
     return {
       user,
-      label: ref('click'),
+      label: ref("click"),
       onSubmit() {
-        $store.dispatch('signin/updateProfile', user.value).catch(console.log);
+        $store.dispatch("signin/updateProfile", user.value).catch(console.log);
       },
       onReset() {
         user = ref($store.state.signin.user);
