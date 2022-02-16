@@ -75,11 +75,8 @@ export class ScheduleController {
       allDay: boolean;
     },
     @Res() res: Response,
-    @Headers('Authorization') accessToken,
   ) {
-    const payload = await this.authService.verifyUser(accessToken);
     const schedule = await this.scheduleService.updateSchedule(
-      payload.email,
       params.id,
       params.title,
       params.start,
@@ -98,13 +95,8 @@ export class ScheduleController {
       id: string;
     },
     @Res() res: Response,
-    @Headers('Authorization') accessToken,
   ) {
-    const payload = await this.authService.verifyUser(accessToken);
-    const schedule = await this.scheduleService.deleteSchedule(
-      payload.email,
-      params.id,
-    );
+    const schedule = await this.scheduleService.deleteSchedule(params.id);
     res.status(HttpStatus.OK).json(schedule);
   }
 }

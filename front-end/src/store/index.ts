@@ -12,6 +12,8 @@ import { ScheduleStateInterface } from './schedule/state';
 // import { ExampleStateInterface } from './module-example/state';
 import account from './module-account';
 import { AccountStateInterface } from './module-account/state';
+import room from './module-room';
+import { RoomStateInterface } from './module-room/state';
 import signin from './module-signin';
 import { SigninStateInterface } from './module-signin/state';
 
@@ -33,6 +35,7 @@ export interface StateInterface {
   example: unknown;
   schedule: ScheduleStateInterface;
   account: AccountStateInterface;
+  room: RoomStateInterface;
   signin: SigninStateInterface;
 }
 
@@ -53,6 +56,7 @@ export default store(function (/* { ssrContext } */) {
       // example
       schedule,
       account,
+      room,
       signin,
     },
 

@@ -16,9 +16,9 @@ export class ScheduleService {
   public async createSchedule(
     email: string,
     id: string,
+    title: string,
     start: string,
     end: string,
-    title: string,
     allDay: boolean,
   ) {
     const result = await createSchedule(email, id, title, start, end, allDay);
@@ -26,19 +26,18 @@ export class ScheduleService {
   }
 
   public async updateSchedule(
-    email: string,
     id: string,
     title: string,
     start: string,
     end: string,
     allDay: boolean,
   ) {
-    const result = await updateSchedule(email, id, title, start, end, allDay);
+    const result = await updateSchedule(id, title, start, end, allDay);
     return result;
   }
 
-  public async deleteSchedule(email: string, id: string) {
-    const result = await deleteSchedule(email, id);
+  public async deleteSchedule(id: string) {
+    const result = await deleteSchedule(id);
     return result;
   }
 }

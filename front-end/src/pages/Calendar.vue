@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="app-main">
-      <FullCalendar class="app-calendar" :options="calendarOptions">
+      <FullCalendar class="app-calendar" :options="calendarOptions" events: all_events,>
       </FullCalendar>
     </div>
   </div>
@@ -20,7 +20,17 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useStore } from 'src/store';
-import { useQuasar } from 'quasar';
+import { Cookies, useQuasar } from 'quasar';
+import { api } from 'src/boot/axios';
+import { AxiosResponse } from 'axios';
+
+interface save_event {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  allDay: boolean;
+}
 
 export default defineComponent({
   components: {
@@ -29,13 +39,24 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $q = useQuasar();
+    const accessToken: string = Cookies.get('access_token');
     let currentEvents = [] as EventApi[];
     // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
-
-    // $store
-    //   .dispatch('schedule/addEvent', $route.params.userId)
-    //   .catch(console.log);
-
+    // $store.dispatch('schedule/getEvent').catch(console.log);
+    let all_events: Array<object> = [];
+    void api
+      .get('/schedule', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response: AxiosResponse) => {
+        console.log(response.data);
+        const events = response.data as save_event[];
+        for (const temp of events) {
+          all_events.push(temp);
+        }
+      });
     // 일정 생성하기(임시저장)
     const handleDateSelect = (arg: DateSelectArg) => {
       const now = new Date();
@@ -59,7 +80,6 @@ export default defineComponent({
         })
           .onOk((data) => {
             let calendarApi = arg.view.calendar;
-            console.log(arg);
             calendarApi.addEvent({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               title: data,
@@ -67,6 +87,7 @@ export default defineComponent({
               end: arg.end,
               allDay: arg.allDay,
             });
+            console.log(arg);
           })
           .onCancel(() => {
             // console.log('>>>> Cancel')
@@ -79,6 +100,7 @@ export default defineComponent({
 
     // 일정 삭제하기
     const handleEventClick = (arg: EventClickArg) => {
+      // console.log(arg.event);
       $q.dialog({
         title: 'Delete Schedule',
         message: '일정을 삭제하시겠습니까?',
@@ -86,10 +108,10 @@ export default defineComponent({
         persistent: true,
       }).onOk(() => {
         arg.event.remove();
+
         // backend를 통해 db에 있는 일정도 삭제
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const deleteEvent = (arg: EventClickArg) =>
-          $store.dispatch('schedule/deleteEvent', arg.event.id);
+        void $store.dispatch('schedule/deleteEvent', arg.event.id);
+        arg.event.remove();
       });
     };
 
@@ -97,49 +119,58 @@ export default defineComponent({
     const changeEvent = (events: EventApi[]) => {
       currentEvents = events;
       if (currentEvents.length > 0) {
-        console.log(currentEvents);
-
         // all-day가 아닌 경우 일정이 등록되었다는 뜻이므로 create보내기
         // all-day가 true인 경우 시간일정이 바뀌었다는 것이므로 update로 보내기
         for (let i = 0; i < currentEvents.length; i++) {
-          if (currentEvents[i].allDay === true && currentEvents[i].id === '') {
-            console.log(currentEvents[i]);
+          // console.log(currentEvents[i]);
+          if (currentEvents[i].allDay === false && currentEvents[i].id === '') {
             // create
             const create_data = {
-              id: currentEvents[i]._instance?.instanceId,
+              id: '',
               title: currentEvents[i].title,
-              start: currentEvents[i].start,
-              end: currentEvents[i].end,
+              start: currentEvents[i].start?.toLocaleString(),
+              end: currentEvents[i].end?.toLocaleString(),
               allDay: currentEvents[i].allDay,
             };
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const createEvent = () =>
-              $store.dispatch('schedule/createEvent', create_data);
             currentEvents.splice(i);
-            console.log(currentEvents);
-          } else if (currentEvents[i].allDay === true) {
+            void api
+              .post('/schedule/create', create_data, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              })
+              .then((response: AxiosResponse) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                all_events.push(response.data);
+                console.log(events);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            // currentEvents.splice(i);
+          } else if (currentEvents[i].start !== currentEvents[i].end) {
             // update
             const update_data = {
               id: currentEvents[i].id,
               title: currentEvents[i].title,
-              start: currentEvents[i].start,
-              end: currentEvents[i].end,
+              start: currentEvents[i].start?.toLocaleString(),
+              end: currentEvents[i].end?.toLocaleString(),
               allDay: currentEvents[i].allDay,
             };
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const updateEvent = () =>
-              $store.dispatch('schedule/updateEvent', update_data);
+            console.log(update_data);
+            void $store.dispatch('schedule/updateEvent', update_data);
             currentEvents.splice(i);
           }
         }
       }
+      currentEvents = [];
     };
 
     // fullcalendar options
     const calendarOptions = {
       plugins: [
-        dayGridPlugin,
         timeGridPlugin,
+        dayGridPlugin,
         interactionPlugin, // needed for dateClick
       ],
       headerToolbar: {
@@ -153,6 +184,9 @@ export default defineComponent({
         day: 'Day',
       },
       initialView: 'dayGridMonth', // 첫 화면 default 값이 오늘 날짜
+      displayEventEnd: true,
+      duration: { hours: 1 },
+      forceEventDuration: true,
       expandRows: true,
       selectOverlap: false,
       slotEventOverlap: false, // 동일시간 대 불가능
@@ -169,6 +203,7 @@ export default defineComponent({
     return {
       calendarOptions,
       currentEvents,
+      all_events,
     };
   },
 });
