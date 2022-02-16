@@ -219,10 +219,10 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { fabYoutube } from '@quasar/extras/fontawesome-v5';
-import { defineComponent } from 'vue';
-import { useQuasar } from 'quasar';
+import { ref } from "vue";
+import { fabYoutube } from "@quasar/extras/fontawesome-v5";
+import { defineComponent } from "vue";
+import { useQuasar } from "quasar";
 // import { watch } from 'vue';
 
 // import { Notify } from 'quasar';
@@ -234,11 +234,11 @@ import { useQuasar } from 'quasar';
 // });
 
 export default defineComponent({
-  name: 'MyLayout',
+  name: "MyLayout",
   setup() {
     const $q = useQuasar();
     const leftDrawerOpen = ref(false);
-    const search = ref('');
+    const search = ref("");
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
     }
@@ -256,10 +256,10 @@ export default defineComponent({
     // 삭제
     function showNotif() {
       $q.notify({
-        position: 'bottom-right',
-        message: 'Jim pinged you.',
-        caption: '5 minutes ago',
-        color: 'secondary',
+        position: "bottom-right",
+        message: "Jim pinged you.",
+        caption: "5 minutes ago",
+        color: "secondary",
       });
     }
     return {
@@ -270,47 +270,45 @@ export default defineComponent({
       search,
       toggleLeftDrawer,
       links1: [
-        { icon: 'home', text: 'Home' },
-        { icon: 'whatshot', text: 'Trending' },
-        { icon: 'bookmark', text: 'Subscriptions' },
+        { icon: "home", text: "Home" },
+        { icon: "whatshot", text: "Trending" },
+        { icon: "bookmark", text: "Subscriptions" },
       ],
       links2: [
-        { icon: 'folder', text: 'Library' },
-        { icon: 'restore', text: 'History' },
-        { icon: 'watch_later', text: 'Watch later' },
-        { icon: 'thumb_up_alt', text: 'Liked videos' },
+        { icon: "folder", text: "Library" },
+        { icon: "restore", text: "History" },
+        { icon: "watch_later", text: "Watch later" },
+        { icon: "thumb_up_alt", text: "Liked videos" },
       ],
       links3: [
-        { icon: 'local_movies', text: 'Movies & Shows' },
-        { icon: 'videogame_asset', text: 'Gaming' },
-        { icon: 'live_tv', text: 'Live' },
+        { icon: "local_movies", text: "Movies & Shows" },
+        { icon: "videogame_asset", text: "Gaming" },
+        { icon: "live_tv", text: "Live" },
       ],
       links4: [
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'flag', text: 'Report history' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'feedback', text: 'Send feedback' },
+        { icon: "settings", text: "Settings" },
+        { icon: "flag", text: "Report history" },
+        { icon: "help", text: "Help" },
+        { icon: "feedback", text: "Send feedback" },
       ],
       buttons1: [
-        { text: 'About' },
-        { text: 'Press' },
-        { text: 'Copyright' },
-        { text: 'Contact us' },
-        { text: 'Creators' },
-        { text: 'Advertise' },
-        { text: 'Developers' },
+        { text: "About" },
+        { text: "Press" },
+        { text: "Copyright" },
+        { text: "Contact us" },
+        { text: "Creators" },
+        { text: "Advertise" },
+        { text: "Developers" },
       ],
       buttons2: [
-        { text: 'Terms' },
-        { text: 'Privacy' },
-        { text: 'Policy & Safety' },
-        { text: 'Test new features' },
+        { text: "Terms" },
+        { text: "Privacy" },
+        { text: "Policy & Safety" },
+        { text: "Test new features" },
       ],
     };
   },
-  created() {
-    console.log(this.$store);
-  },
+  created() {},
 });
 </script>
 

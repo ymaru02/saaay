@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */ /*
-eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
-@typescript-eslint/no-unsafe-assignment */
 <template>
   <div class="WAL position-relative bg-grey-4" :style="style">
     <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
@@ -130,8 +127,8 @@ eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>
             <q-item
-              v-for="(follower, index) in follows"
-              :key="`follower-${index}`"
+              v-for="(follow, index) in follows"
+              :key="index"
               clickable
               v-ripple
               @click="setCurrentConversation(index)"
@@ -149,17 +146,19 @@ eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
 
               <q-item-section>
                 <q-item-label lines="1">
-                  {{ follower._fields[0].properties.username }}
+                  {{ follow._fields[0].properties.username }}
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
-                  <!-- <q-icon name="check" v-if="conversation.sent" /> -->
-                  <!-- <q-icon name="not_interested" v-if="conversation.deleted" /> -->
-                  <!-- {{ conversation.caption }} -->
+                  <!-- 삭제 -->
+                  <!-- <q-icon name="check" v-if="conversation.sent" />
+                  <q-icon name="not_interested" v-if="conversation.deleted" />
+                  {{ conversation.caption }} -->
                 </q-item-label>
               </q-item-section>
 
               <q-item-section side>
                 <q-item-label caption>
+                  <!-- 삭제 -->
                   <!-- {{ conversation.time }} -->
                 </q-item-label>
                 <q-icon name="keyboard_arrow_down" />
@@ -176,22 +175,15 @@ eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
       <q-footer>
         <q-toolbar class="bg-grey-3 text-black row">
           <q-btn round flat icon="insert_emoticon" class="q-mr-sm" />
-          <q-form class="full-width">
-            <q-input
-              rounded
-              outlined
-              dense
-              class="WAL__field col-grow q-mr-sm"
-              bg-color="white"
-              v-model="message"
-              placeholder="Type a message"
-            >
-              <template v-slot:after>
-                <q-btn round dense flat icon="send" />
-              </template>
-            </q-input>
-          </q-form>
-
+          <q-input
+            rounded
+            outlined
+            dense
+            class="WAL__field col-grow q-mr-sm"
+            bg-color="white"
+            v-model="message"
+            placeholder="Type a message"
+          />
           <q-btn round flat icon="mic" />
         </q-toolbar>
       </q-footer>
@@ -200,26 +192,19 @@ eslint-disable @typescript-eslint/no-unsafe-member-access */ /* eslint-disable
 </template>
 
 <script>
-import { useQuasar } from 'quasar';
-import { ref, computed, watch } from 'vue';
-import { defineComponent } from 'vue';
-import { useStore } from 'src/store';
-import { OpenVidu } from 'openvidu-browser';
+import { useQuasar } from "quasar";
+import { ref, computed, watch } from "vue";
+import { useStore } from "src/store";
 
-export default defineComponent({
-  name: 'WhatsappLayout',
+export default {
+  name: "WhatsappLayout",
+
   setup() {
-    let OV = ref();
-    let mainStreamManager = ref();
-    let publisher = ref();
-    let subscribers = ref();
-
-    let mySessionId = ref('SessionA');
-    let myUserName = ref(
-      'Participant' + String(Math.floor(Math.random() * 100))
-    );
-
     const $store = useStore();
+
+    $store.dispatch("account/getFollowerList", 1).catch(console.log);
+    $store.dispatch("account/getFollowingList", 1).catch(console.log);
+
     const follows = computed(() =>
       Object.assign(
         {},
@@ -231,11 +216,11 @@ export default defineComponent({
     const $q = useQuasar();
 
     const leftDrawerOpen = ref(false);
-    const search = ref('');
-    const message = ref('');
+    const search = ref("");
+    const message = ref("");
     const currentConversationIndex = ref(0);
 
-    const userName = ref('');
+    const userName = ref("");
     const currentConversation = computed(() => {
       return Object.assign(
         {},
@@ -245,83 +230,16 @@ export default defineComponent({
     });
 
     const style = computed(() => ({
-      height: ''.concat($q.screen.height, 'px'),
+      height: $q.screen.height + "px",
     }));
-
-    // 수정사항
-    //  팔로우 팔로워 합친 데이터 가져오기
-    function setCurrentConversation(index) {
-      currentConversationIndex.value = index | 0;
-
-      // --- Get an OpenVidu object ---
-      OV = new OpenVidu();
-
-      // --- Init a session ---
-      session = OV.value.initSession();
-
-      // --- Specify the actions when events take place in the session ---
-
-      // On every new Stream received...
-      session.on('streamCreated', ({ stream }) => {
-        const subscriber = session.subscribe(stream);
-        subscribers.value.push(subscriber);
-      });
-
-      // On every Stream destroyed...
-      session.on('streamDestroyed', ({ stream }) => {
-        const index = subscribers.value.indexOf(stream.streamManager, 0);
-        if (index >= 0) {
-          subscribers.value.splice(index, 1);
-        }
-      });
-
-      // On every asynchronous exception...
-      session.on('exception', ({ exception }) => {
-        console.warn(exception);
-      });
-
-      // --- Connect to the session with a valid user token ---
-
-      // 'getToken' method is simulating what your server-side should do.
-      // 'token' parameter should be retrieved and returned by your own backend
-      getToken(mySessionId).then((token) => {
-        this.session
-          .connect(token, { clientData: myUserName })
-          .then(() => {
-            // --- Get your own camera stream with the desired properties ---
-
-            let publisher = OV.value.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '640x480', // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            mainStreamManager = publisher;
-            publisher = publisher;
-
-            // --- Publish your stream ---
-
-            session.publish(publisher);
-          })
-          .catch((error) => {
-            console.log(
-              'There was an error connecting to the session:',
-              error.code,
-              error.message
-            );
-          });
-      });
-
-      // window.addEventListener('beforeunload', leaveSession);
-    }
 
     function toggleLeftDrawer() {
       leftDrawerOpen.value = !leftDrawerOpen.value;
+    }
+
+    function setCurrentConversation(index) {
+      currentConversationIndex.value = index;
+      console.log(index);
     }
     watch(currentConversationIndex, () => {
       userName.value = Object.assign(
@@ -331,8 +249,8 @@ export default defineComponent({
       )[currentConversationIndex.value]._fields[0].properties.username;
     });
     return {
-      follows,
       userName,
+      follows,
 
       leftDrawerOpen,
       search,
@@ -346,13 +264,8 @@ export default defineComponent({
       toggleLeftDrawer,
     };
   },
-
-  created() {
-    const $store = useStore();
-    $store.dispatch('account/getFollowerList', 1).catch(console.log);
-    $store.dispatch('account/getFollowingList', 1).catch(console.log);
-  },
-});
+  created() {},
+};
 </script>
 
 <style lang="scss">
@@ -363,7 +276,7 @@ export default defineComponent({
   padding-bottom: 20px;
 
   &:before {
-    content: '';
+    content: "";
     height: 127px;
     position: fixed;
     top: 0;
