@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 //다이얼로그 사용하기위해 임포트!!!!
 import { useQuasar } from "quasar";
 // import { computed, ref, watch } from 'vue';
@@ -49,14 +49,7 @@ export default {
     $store.dispatch("room/getRoomList").catch(console.log);
 
     const loadRoomList = () => $store.dispatch("room/getRoomList");
-    //방생성 샘플 데이터
-    const sampledata = {
-      roomName: "roomname02",
-      category: ["category01"],
-      moderator: ["moder01"],
-      participates: ["seokwon", "gudong", "jeman", "donghee", "chiwoo"],
-      notice: "samplenotice",
-    };
+
     //방생성
     let room = {
       roomName: "",
@@ -86,27 +79,24 @@ export default {
           console.log(room);
           //vuex에서 방만들어줌
           $store.dispatch("room/createRoom", { room, accessToken });
+          //rooms 다시받아옴
+          loadRoomList;
         })
         .onCancel(() => {
-          console.log(">>>> Cancel");
+          // console.log(">>>> Cancel");
         })
         .onDismiss(() => {
-          console.log("I am triggered on both OK and Cancel");
+          // console.log("I am triggered on both OK and Cancel");
         });
     }
     //vuex action에서 백엔드로 방을 만들게 데이터 전달하는 함수
-    const createRoom = () => $store.dispatch("room/createRoom", sampledata);
 
     const rooms = computed(() => $store.state.room.rooms);
 
     return {
       rooms,
       loadRoomList,
-      createRoom,
-      //샘플데이터 지울것!!!
-      sampledata,
       prompt,
-      theme: "bg-grey-8 text-white",
     }; //end setup
   }, // end export default
 };

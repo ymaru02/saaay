@@ -8,13 +8,20 @@ export function getRoomList({ commit }) {
   });
 }
 
+export function getRoom({ commit }, roomId) {
+  api.get(`room/${roomId}`).then((response) => {
+    commit("SET_ROOM", response.data);
+  });
+}
+
 export function createRoom({ commit }, data) {
   // 백엔드로 방만드는데 필요한 파라미터들을 보냄
   //url 주소 , 데이터객체
+  console.log(data.accessToken);
   api
     .post(`room/`, data.room, {
       headers: {
-        Authorization: data.accessToken,
+        Authorization: "Bearer " + data.accessToken,
       },
     })
     .then(() => {

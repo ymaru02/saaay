@@ -34,10 +34,11 @@ export class RoomController {
     @Res() res: Response,
     @Headers('Authorization') accessToken,
   ) {
+    const payload = await this.authService.verifyUser(accessToken);
     const room = await this.roomService.createRoom(
       RoomDTO.roomName,
       RoomDTO.category,
-      RoomDTO.moderator,
+      [payload.email],
       RoomDTO.notice,
       RoomDTO.participates,
     );
