@@ -4,7 +4,6 @@ import { api } from "src/boot/axios";
 
 export async function getEvent({ commit }) {
   const accessToken = Cookies.get("access_token");
-  console.log(accessToken);
   api
     .get("schedule/", {
       headers: {
@@ -12,7 +11,6 @@ export async function getEvent({ commit }) {
       },
     })
     .then((res) => {
-      console.log(res.data);
       commit("GET_EVENT", res.data);
     })
     .catch((err) => console.log(err));
