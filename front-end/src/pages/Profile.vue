@@ -33,6 +33,7 @@
                 v-model="user.username"
                 type="username"
                 label="Username"
+                readonly
               >
                 <template v-slot:prepend>
                   <q-icon name="person" />
@@ -44,6 +45,7 @@
                 v-model="user.biography"
                 type="text"
                 label="Biography"
+                readonly
               >
                 <template v-slot:prepend>
                   <q-icon name="newspaper" />
@@ -76,32 +78,36 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { api } from "src/boot/axios";
-import { useRouter } from "vue-router";
 import { useStore } from "src/store";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+
 export default {
-  updated() {
-    user = $store.getters.signin.getUser;
-  },
   setup() {
     const $store = useStore();
-    const router = useRouter();
-    let user = ref({ ...$store.state.signin.user });
+    const route = useRoute();
+    const userId = route.params.userId;
+    console.log(userId);
+    $store.dispatch("user/getUserById", userId);
+
+    let user = {
+      username: "test",
+      email: "test email",
+      biography: "bio",
+      follower: [],
+      following: [],
+    };
+    // let user = ref({ ...$store.state.signin.user });
 
     return {
       user,
-      label: ref("click"),
       onSubmit() {
-        console.log(user.value);
-        $store
-          .dispatch("signin/updateProfile", user.value)
-          .then(router.push("main"))
-          .catch(console.log);
+        console.log(user);
+      },
+      onReset() {
+        console.log(user);
       },
     };
   },
 };
 </script>
-
-<style></style>
