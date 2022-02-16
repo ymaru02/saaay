@@ -13,13 +13,13 @@
             </div>
             <div class="col-xl-1 col-lg-2 col-md-3 column justify-center">
               <div class="column items-center">
-                <div class="text-bold text-h5">{{ myFollower.length }}</div>
+                <div class="text-bold text-h5">{{ ownerFollower.length }}</div>
                 <div class="text-grey">followers</div>
               </div>
             </div>
             <div class="col-xl-1 col-lg-2 col-md-3 column justify-center">
               <div class="column items-center">
-                <div class="text-bold text-h5">{{ myFollowing.length }}</div>
+                <div class="text-bold text-h5">{{ ownerFollowing.length }}</div>
                 <div class="text-grey">followings</div>
               </div>
             </div>
@@ -392,12 +392,19 @@ export default {
     // });
 
     const addMyFollowingList = (targetId) =>
-      $store.dispatch("account/addMyFollowingList", { targetId, accessToken });
+      $store.dispatch("account/addMyFollowingList", {
+        targetId,
+        accessToken,
+        ownerId: owner.value[0]._fields[0].identity.low,
+        myId,
+      });
 
     const deleteMyFollowingList = (targetId) =>
       $store.dispatch("account/deleteMyFollowingList", {
         targetId,
         accessToken,
+        ownerId: owner.value[0]._fields[0].identity.low,
+        myId,
       });
 
     const addMyBlockList = (targetId) =>
@@ -422,6 +429,8 @@ export default {
     const followings = computed(() => $store.state.account.followings);
     const blockList = computed(() => $store.state.account.blockList);
     const blockListId = computed(() => $store.state.account.blockListId);
+    const ownerFollower = computed(() => $store.state.account.ownerFollower);
+    const ownerFollowing = computed(() => $store.state.account.ownerFollowing);
 
     watch(targetId, () => {
       $store
@@ -454,6 +463,8 @@ export default {
       followings,
       blockList,
       blockListId,
+      ownerFollower,
+      ownerFollowing,
       addMyFollowingList,
       deleteMyFollowingList,
       addMyBlockList,
