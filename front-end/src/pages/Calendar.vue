@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { computed } from "vue";
 import "@fullcalendar/core/vdom"; // solve problem with Vite
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -29,7 +28,6 @@ export default {
 
     // // 이미 등록되어있는 이벤트는 eventSet에 추가(created)
     $store.dispatch("schedule/getEvent").catch(console.log);
-    // let start_data = $store.state.schedule.events;
     // console.log("1qaz", start_data);
 
     // // 일정 생성하기
