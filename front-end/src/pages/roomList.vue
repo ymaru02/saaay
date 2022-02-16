@@ -1,4 +1,5 @@
 <template>
+  <q-btn size="22px" class="q-px-xl q-py-xs" color="purple" label="방만들기" />
   <div class="q-pa-md row items-start q-gutter-md">
     <div v-for="(room, index) in rooms" :key="index">
       <q-card class="my-card">
