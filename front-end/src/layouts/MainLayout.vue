@@ -107,7 +107,11 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable class="GL__menu-link" to="profile">
+                <q-item
+                  clickable
+                  class="GL__menu-link"
+                  :to="`/profile/${myId}`"
+                >
                   <q-item-section>Your profile</q-item-section>
                 </q-item>
                 <q-separator />
@@ -227,7 +231,7 @@
 import { ref, watch } from "vue";
 import { fabYoutube } from "@quasar/extras/fontawesome-v5";
 import { defineComponent } from "vue";
-import { useQuasar } from "quasar";
+import { useQuasar, Cookies } from "quasar";
 import { useStore } from "src/store";
 // import { watch } from 'vue';
 
@@ -244,6 +248,24 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const leftDrawerOpen = ref(false);
+    let myId;
+
+    const accessToken = Cookies.get("access_token");
+    if (accessToken) {
+      const base64Url = accessToken.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      const data = JSON.parse(jsonPayload);
+      myId = data.id;
+    }
 
     const search = ref("");
     const $store = useStore();
@@ -277,6 +299,7 @@ export default defineComponent({
       showNotif,
 
       fabYoutube,
+      myId,
       leftDrawerOpen,
       search,
       toggleLeftDrawer,
