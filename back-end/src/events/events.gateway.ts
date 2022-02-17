@@ -27,6 +27,12 @@ export class EventsGateway
     return data;
   }
 
+  @SubscribeMessage('signaling')
+  handleSignal(@MessageBody() data: string, client: Socket) {
+    // console.log(data);
+    // console.log(client.id);
+  }
+
   afterInit(server: Server) {
     this.logger.log('Init');
     console.log(server);
@@ -37,7 +43,24 @@ export class EventsGateway
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log(args);
     this.logger.log(`Client Connected : ${client.id}`);
+    console.log(client.rooms);
+    client.emit('signaling', 'hi');
+
+    const room = 'ExampleRoom';
+
+    const join = (room) => {
+      // Count clients in room
+      // Check if client can join to the room
+      client.join(room);
+      client.emit('join', { clientCount: 1 });
+      console.log('Joined to room!');
+    };
+
+    join(room);
+
+    client.on('signaling', (message) => {
+      client.to(room).emit('signaling', message);
+    });
   }
 }
