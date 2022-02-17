@@ -22,10 +22,10 @@ export class AuthController {
 
   @Get('google/redirect') // 2
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req, @Res() res: Response) {
+  async googleAuthRedirect(@Req() req, @Res() res: Response) {
     console.log(req.user);
-    res.cookie('access_token', req.user.accessToken);
-    this.authService.signInWithGoogle(req);
+    const result = await this.authService.signInWithGoogle(req);
+    res.cookie('access_token', result.access_token);
     res.redirect('http://localhost:8080');
   }
 }

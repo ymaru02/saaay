@@ -52,13 +52,13 @@
             <q-tooltip>Messages</q-tooltip>
           </q-btn>
 
-          <q-btn v-if="logIn === 'signin'" round flat href="/#/signin">
+          <q-btn v-if="logIn" round flat href="/#/roomList">
             <q-avatar size="26px">
               <img src="images/blank-profile-picture.png" />
             </q-avatar>
             <q-tooltip>Account</q-tooltip>
           </q-btn>
-          <q-btn v-else round flat href="/#/roomList">
+          <q-btn v-else round flat href="/#/signin">
             <q-avatar size="26px">
               <img src="images/blank-profile-picture.png" />
             </q-avatar>

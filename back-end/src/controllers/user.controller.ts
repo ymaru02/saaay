@@ -141,7 +141,7 @@ export class UserController {
 
   @Get('/verify')
   async verify(@Headers('Authorization') accessToken, @Res() res: Response) {
-    console.log('verify user by Access Token');
+    console.log('verify user by Access Token', accessToken);
     const result = await this.authService.verifyUser(accessToken);
     if (result) {
       const user = await this.findByEmail(result.email);

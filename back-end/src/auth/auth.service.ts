@@ -49,7 +49,7 @@ export class AuthService {
     return this.jwtService.verify(jwt);
   }
 
-  async signInWithGoogle(data) {
+  async signInWithGoogle(data): Promise<{ access_token: string }> {
     if (!data.user) throw new BadRequestException();
     console.log('signin google', data.user);
 
