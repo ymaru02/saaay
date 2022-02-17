@@ -1,8 +1,7 @@
 export default function () {
   return {
-    prop: false,
-    message: "signin",
     user: {
+      id: "string",
       email: "string",
       username: "string",
       biography: "string",

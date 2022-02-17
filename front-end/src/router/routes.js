@@ -55,7 +55,7 @@ const routes = [
 
   {
     name: "Profile",
-    path: "/profile",
+    path: "/profile/:userId",
     component: () => import("layouts/PreviewLayout.vue"),
     children: [{ path: "", component: () => import("pages/Profile.vue") }],
   },
