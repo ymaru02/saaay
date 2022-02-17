@@ -1,32 +1,9 @@
 <template>
   <div id="main-container" class="container">
-    <div id="join" v-if="!session">
-      <div id="img-div">
-        <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
-      </div>
-      <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Join a video session</h1>
-        <div class="form-group">
-          <p>
-            <label>Participant</label>
-            <!-- <input
-              v-model="myUserName"
-              class="form-control"
-              type="text"
-              required
-              readonly
-            /> -->
-          </p>
-          <p>
-            <label>Session</label>
-            <!-- <input
-              v-model="mySessionId"
-              class="form-control"
-              type="text"
-              required
-              readonly
-            /> -->
-          </p>
+    <div id="join" v-if="!session" class="col self-center">
+      <div id="join-dialog">
+        <h1>Join a {{ roomName }}</h1>
+        <div class="form-group row justify-center">
           <p class="text-center">
             <button class="btn btn-lg btn-success" @click="joinSession()">
               Join!
@@ -37,17 +14,62 @@
     </div>
 
     <div id="session" v-if="session">
-      <div id="session-header">
-        <h1 id="session-title">{{ roomName }}</h1>
-        <input
-          class="btn btn-large"
-          type="button"
-          id="buttonLeaveSession"
-          @click="leaveSession"
-          value="Leave session"
-        />
-        <button @click="videoToggle">Video</button>
-        <button @click="audioToggle">Audio</button>
+      <div id="session-header" class="row justify-center">
+        <div v-if="isVideo">
+          <q-btn
+            @click="videoToggle"
+            round
+            icon="videocam_off"
+            stack
+            glossy
+            color="black"
+            style="margin: 10px"
+          />
+        </div>
+        <div v-else>
+          <q-btn
+            @click="videoToggle"
+            round
+            icon="video_camera_front"
+            stack
+            glossy
+            color="black"
+            style="margin: 10px"
+          />
+        </div>
+        <div v-if="isAudio">
+          <q-btn
+            @click="audioToggle"
+            round
+            icon="mic_off"
+            stack
+            glossy
+            color="black"
+            style="margin: 10px"
+          />
+        </div>
+        <div v-else>
+          <q-btn
+            @click="audioToggle"
+            round
+            icon="mic"
+            stack
+            glossy
+            color="black"
+            style="margin: 10px"
+          />
+        </div>
+        <div>
+          <q-btn
+            @click="leaveSession"
+            round
+            icon="logout"
+            stack
+            glossy
+            color="black"
+            style="margin: 10px"
+          />
+        </div>
       </div>
       <div id="main-video" class="col-md-6">
         <user-video :stream-manager="mainStreamManager" />
@@ -214,9 +236,8 @@ export default {
       this.publisher = undefined;
       this.subscribers = [];
       this.OV = undefined;
-      // const router = useRouter();
-      // router.push("/roomList");
       window.removeEventListener("beforeunload", this.leaveSession);
+      this.$router.push("/roomList");
     },
 
     updateMainVideoStreamManager(stream) {
@@ -414,12 +435,6 @@ input.btn {
 
 #session-title {
   display: inline-block;
-}
-
-#buttonLeaveSession {
-  float: right;
-  margin-top: 100px;
-  background-color: crimson;
 }
 
 #video-container video {
