@@ -96,10 +96,8 @@ export default {
           email: email.value,
           password: password.value,
         };
-        $store
-          .dispatch("signin/authenticate", user)
-          .catch(console.log);
-          /**
+        $store.dispatch("signin/authenticate", user).catch(console.log);
+        /**
            * () => {
       Notify.create({
         color: "red-5",

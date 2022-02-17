@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { ResourceError } from 'src/error/resource.error';
+import { GoogleCodeDto } from 'src/models/google.code.dto';
 import { UserDto } from 'src/models/user.dto';
 import { UserService } from 'src/services/user.service';
 import { AccountService } from '../services/account.service';
